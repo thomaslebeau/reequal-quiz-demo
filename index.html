@@ -5,6 +5,20 @@
     <link rel="icon" href="/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reequal — Quiz Builder</title>
+    <script>
+      // SPA redirect handler for GitHub Pages
+      (function () {
+        var redirect = window.location.search.match(/^\?\/(.*)/);
+        if (redirect) {
+          var decoded = redirect[1].split('&').map(function (s) {
+            return s.replace(/~and~/g, '&');
+          }).join('?');
+          window.history.replaceState(null, '',
+            '/' + decoded + window.location.hash
+          );
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="app"></div>

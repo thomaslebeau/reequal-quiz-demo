@@ -11,7 +11,7 @@
       />
     </div>
 
-    <div class="progress-path__nodes">
+    <div ref="nodesRef" class="progress-path__nodes">
       <div
         v-for="(step, i) in total"
         :key="i"
@@ -27,12 +27,33 @@
 </template>
 
 <script setup lang="ts">
-  import { computed } from 'vue'
+  import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
+  import { getGsap } from '@/composables/useGsap'
 
   const props = defineProps<{
     total: number
     current: number
   }>()
+
+  const nodesRef = ref<HTMLElement | null>(null)
+  let pulseTween: any
+
+  async function pulseCurrentNode () {
+    await nextTick()
+    const gsap = await getGsap()
+    if (!gsap || !nodesRef.value) return
+    if (pulseTween) pulseTween.kill()
+    const nodes = nodesRef.value.querySelectorAll('.progress-path__node')
+    const currentNode = nodes[props.current]
+    if (!currentNode) return
+    pulseTween = gsap.to(currentNode, { scale: 1.15, repeat: -1, yoyo: true, duration: 0.6, ease: 'sine.inOut' })
+  }
+
+  onMounted(pulseCurrentNode)
+  watch(() => props.current, pulseCurrentNode)
+  onUnmounted(() => {
+    if (pulseTween) pulseTween.kill()
+  })
 
   const progressPercent = computed(() =>
     props.total > 0

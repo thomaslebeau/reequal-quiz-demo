@@ -10,15 +10,15 @@
       <v-progress-circular
         :color="progressColor"
         data-testid="score-progress"
-        :model-value="percentage"
+        :model-value="displayedPercentage"
         :size="120"
         :width="10"
       >
-        <span class="text-h5 font-weight-bold">{{ percentage }}%</span>
+        <span class="text-h5 font-weight-bold">{{ displayedPercentage }}%</span>
       </v-progress-circular>
 
       <div class="text-h6 mt-4">
-        {{ score }} / {{ total }}
+        {{ displayedScore }} / {{ total }}
       </div>
 
       <v-alert
@@ -88,7 +88,8 @@
 
 <script setup lang="ts">
   import type { QuestionResult } from '@/types/quiz'
-  import { computed } from 'vue'
+  import { computed, onMounted, ref } from 'vue'
+  import { animationsEnabled, getGsap } from '@/composables/useGsap'
 
   const props = defineProps<{
     score: number
@@ -103,6 +104,29 @@
   const percentage = computed(() =>
     props.total > 0 ? Math.round((props.score / props.total) * 100) : 0,
   )
+
+  const displayedScore = ref(animationsEnabled.value ? 0 : props.score)
+  const displayedPercentage = ref(animationsEnabled.value ? 0 : percentage.value)
+
+  onMounted(async () => {
+    const gsap = await getGsap()
+    if (!gsap) {
+      displayedScore.value = props.score
+      displayedPercentage.value = percentage.value
+      return
+    }
+    const proxy = { s: 0, p: 0 }
+    gsap.to(proxy, {
+      s: props.score,
+      p: percentage.value,
+      duration: 1.2,
+      ease: 'power2.out',
+      onUpdate: () => {
+        displayedScore.value = Math.round(proxy.s)
+        displayedPercentage.value = Math.round(proxy.p)
+      },
+    })
+  })
 
   const isPassing = computed(() => percentage.value >= 70)
 

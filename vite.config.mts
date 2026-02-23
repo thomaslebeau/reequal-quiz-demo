@@ -6,6 +6,7 @@ import { defineConfig, type UserConfig } from 'vite'
 import Vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 
 export default defineConfig({
+  base: '/reequal-quiz-demo/',
   plugins: [
     Vue({
       template: { transformAssetUrls },

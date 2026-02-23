@@ -7,21 +7,23 @@
     </v-card-item>
 
     <v-card-text class="px-6 pt-4 pb-2">
-      <v-card
-        v-for="(answer, i) in question.answers"
-        :key="answer.id"
-        class="mb-3 answer-option"
-        :class="answerCardClass(answer.id)"
-        :data-testid="`answer-option-${i}`"
-        :disabled="!!feedbackResult"
-        rounded="lg"
-        :variant="answerVariant(answer.id)"
-        @click="selectAnswer(answer.id)"
-      >
-        <v-card-text class="d-flex align-center">
-          <span class="text-body-1">{{ answer.text }}</span>
-        </v-card-text>
-      </v-card>
+      <div ref="answersRef">
+        <v-card
+          v-for="(answer, i) in question.answers"
+          :key="answer.id"
+          class="mb-3 answer-option"
+          :class="answerCardClass(answer.id)"
+          :data-testid="`answer-option-${i}`"
+          :disabled="!!feedbackResult"
+          rounded="lg"
+          :variant="answerVariant(answer.id)"
+          @click="selectAnswer(answer.id)"
+        >
+          <v-card-text class="d-flex align-center">
+            <span class="text-body-1">{{ answer.text }}</span>
+          </v-card-text>
+        </v-card>
+      </div>
 
       <v-alert
         v-if="feedbackResult?.correct"
@@ -76,7 +78,8 @@
 <script setup lang="ts">
   import type { SubmitResult } from '@/composables/useQuizPlayer'
   import type { Question } from '@/types/quiz'
-  import { ref } from 'vue'
+  import { nextTick, onMounted, ref, watch } from 'vue'
+  import { getGsap } from '@/composables/useGsap'
 
   const props = defineProps<{
     question: Question
@@ -90,6 +93,7 @@
   }>()
 
   const selectedId = ref<string | null>(null)
+  const answersRef = ref<HTMLElement | null>(null)
 
   function selectAnswer (answerId: string) {
     if (props.feedbackResult) return
@@ -113,6 +117,68 @@
     }
     return {
       'bg-primary': selectedId.value === answerId,
+    }
+  }
+
+  async function animateAnswersIn () {
+    await nextTick()
+    const gsap = await getGsap()
+    if (!gsap || !answersRef.value) return
+    const cards = answersRef.value.querySelectorAll('.answer-option')
+    if (cards.length === 0) return
+    gsap.from(cards, { scale: 0, opacity: 0, stagger: 0.08, duration: 0.4, ease: 'back.out(1.4)' })
+  }
+
+  onMounted(animateAnswersIn)
+  watch(() => props.question.id, animateAnswersIn)
+
+  watch(() => props.feedbackResult, async result => {
+    if (!result) return
+    const gsap = await getGsap()
+    if (!gsap || !answersRef.value) return
+
+    const selectedIdx = props.question.answers.findIndex(a => a.id === props.selectedAnswerId)
+    const cards = answersRef.value.querySelectorAll('.answer-option')
+    const selectedCard = cards[selectedIdx]
+    if (!selectedCard) return
+
+    if (result.correct) {
+      gsap.fromTo(selectedCard, { scale: 1 }, { scale: 1.08, yoyo: true, repeat: 2, duration: 0.15, ease: 'power1.inOut' })
+      spawnConfetti(gsap, selectedCard as HTMLElement)
+    } else {
+      gsap.fromTo(selectedCard, { x: 0 }, { x: 10, yoyo: true, repeat: 4, duration: 0.08, ease: 'power1.inOut' })
+    }
+  })
+
+  function spawnConfetti (gsap: NonNullable<Awaited<ReturnType<typeof getGsap>>>, origin: HTMLElement) {
+    const rect = origin.getBoundingClientRect()
+    const cx = rect.left + rect.width / 2
+    const cy = rect.top + rect.height / 2
+    const colors = ['#F5A623', '#2D1B69', '#4CAF50', '#FF5252', '#2196F3', '#FF9800']
+    for (let i = 0; i < 12; i++) {
+      const dot = document.createElement('div')
+      Object.assign(dot.style, {
+        position: 'fixed',
+        left: `${cx}px`,
+        top: `${cy}px`,
+        width: '8px',
+        height: '8px',
+        borderRadius: '50%',
+        backgroundColor: colors[i % colors.length],
+        zIndex: '9999',
+        pointerEvents: 'none',
+      })
+      document.body.append(dot)
+      const angle = (Math.PI * 2 * i) / 12
+      const dist = 60 + Math.random() * 40
+      gsap.to(dot, {
+        x: Math.cos(angle) * dist,
+        y: Math.sin(angle) * dist,
+        opacity: 0,
+        duration: 0.6,
+        ease: 'power2.out',
+        onComplete: () => dot.remove(),
+      })
     }
   }
 

@@ -1,5 +1,5 @@
 <template>
-  <v-card class="quiz-card pa-6" elevation="0">
+  <v-card class="quiz-card pa-6" elevation="0" rounded="lg">
     <v-card-text>
       <div class="d-flex align-start ga-4 mb-4">
         <v-avatar

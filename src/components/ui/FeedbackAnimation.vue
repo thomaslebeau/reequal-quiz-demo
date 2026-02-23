@@ -2,6 +2,7 @@
   <div class="feedback-animation">
     <div
       v-if="visible"
+      ref="contentRef"
       class="d-flex flex-column align-center"
       :class="correct ? 'feedback-correct' : 'feedback-incorrect'"
       data-testid="feedback-content"
@@ -21,32 +22,26 @@
 </template>
 
 <script setup lang="ts">
-  defineProps<{
+  import { nextTick, ref, watch } from 'vue'
+  import { getGsap } from '@/composables/useGsap'
+
+  const props = defineProps<{
     correct: boolean
     visible: boolean
   }>()
+
+  const contentRef = ref<HTMLElement | null>(null)
+
+  watch(() => props.visible, async show => {
+    if (!show) return
+    await nextTick()
+    const gsap = await getGsap()
+    if (!gsap || !contentRef.value) return
+
+    if (props.correct) {
+      gsap.from(contentRef.value, { scale: 0.5, opacity: 0, duration: 0.5, ease: 'elastic.out(1, 0.4)' })
+    } else {
+      gsap.fromTo(contentRef.value, { x: 0 }, { x: 8, yoyo: true, repeat: 4, duration: 0.08, ease: 'power1.inOut' })
+    }
+  })
 </script>
-
-<style scoped>
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.15); }
-  100% { transform: scale(1); }
-}
-
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  20% { transform: translateX(-8px); }
-  40% { transform: translateX(8px); }
-  60% { transform: translateX(-6px); }
-  80% { transform: translateX(6px); }
-}
-
-.feedback-correct {
-  animation: pulse 0.5s ease;
-}
-
-.feedback-incorrect {
-  animation: shake 0.4s ease;
-}
-</style>

@@ -30,7 +30,7 @@
       <div class="text-body-2 text-medium-emphasis">Create your first quiz to get started</div>
     </div>
 
-    <v-row v-else>
+    <v-row v-else ref="cardRowRef">
       <v-col
         v-for="quiz in filteredQuizzes"
         :key="quiz.id"
@@ -51,15 +51,17 @@
 </template>
 
 <script setup lang="ts">
-  import { computed, ref } from 'vue'
+  import { computed, nextTick, onMounted, ref, watch } from 'vue'
   import { useRouter } from 'vue-router'
   import QuizCard from '@/components/quiz/QuizCard.vue'
+  import { getGsap } from '@/composables/useGsap'
   import { useQuizStore } from '@/stores/quizStore'
 
   const router = useRouter()
   const store = useQuizStore()
 
   const search = ref('')
+  const cardRowRef = ref<any>(null)
 
   const filteredQuizzes = computed(() => {
     const term = search.value.toLowerCase().trim()
@@ -80,4 +82,17 @@
   function onPlay (id: string) {
     router.push({ name: 'quiz-play', params: { id } })
   }
+
+  async function animateCards () {
+    await nextTick()
+    const gsap = await getGsap()
+    if (!gsap || !cardRowRef.value) return
+    const el = cardRowRef.value.$el ?? cardRowRef.value
+    const cols = el.querySelectorAll(':scope > .v-col')
+    if (cols.length === 0) return
+    gsap.from(cols, { opacity: 0, y: 40, stagger: 0.1, duration: 0.5, ease: 'power2.out' })
+  }
+
+  onMounted(animateCards)
+  watch(filteredQuizzes, animateCards)
 </script>
