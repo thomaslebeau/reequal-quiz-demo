@@ -1,11 +1,23 @@
 <template>
-  <v-fade-transition>
-    <div v-if="visible" :class="['feedback-animation', correct ? 'correct' : 'incorrect']">
-      <v-icon :color="correct ? 'success' : 'error'" size="64">
-        {{ correct ? 'mdi-check-circle' : 'mdi-close-circle' }}
-      </v-icon>
+  <div class="feedback-animation">
+    <div
+      v-if="visible"
+      data-testid="feedback-content"
+      class="d-flex flex-column align-center"
+      :class="correct ? 'feedback-correct' : 'feedback-incorrect'"
+    >
+      <v-icon
+        data-testid="feedback-icon"
+        :icon="correct ? 'mdi-check-circle' : 'mdi-close-circle'"
+        :color="correct ? 'success' : 'error'"
+        size="64"
+        class="mb-2"
+      />
+      <span class="text-h6 font-weight-bold" :class="correct ? 'text-success' : 'text-error'">
+        {{ correct ? 'Correct!' : 'Incorrect' }}
+      </span>
     </div>
-  </v-fade-transition>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -14,3 +26,27 @@ defineProps<{
   visible: boolean
 }>()
 </script>
+
+<style scoped>
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(6px); }
+}
+
+.feedback-correct {
+  animation: pulse 0.5s ease;
+}
+
+.feedback-incorrect {
+  animation: shake 0.4s ease;
+}
+</style>

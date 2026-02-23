@@ -15,7 +15,8 @@
       <v-card-text>
         <ProgressPath
           data-testid="progress-path"
-          :progress="player.progress.value"
+          :total="player.totalQuestions.value"
+          :current="player.currentIndex.value"
         />
 
         <div class="text-subtitle-1 text-center mt-2 mb-4">
