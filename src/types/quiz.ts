@@ -17,3 +17,10 @@ export interface Quiz {
   createdAt: Date
   updatedAt: Date
 }
+
+export interface QuestionResult {
+  questionText: string
+  correct: boolean
+  selectedAnswerText: string
+  correctAnswerText: string
+}
