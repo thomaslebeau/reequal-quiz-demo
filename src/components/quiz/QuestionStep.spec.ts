@@ -1,5 +1,5 @@
 import type { VueWrapper } from '@vue/test-utils'
-import type { Answer, Question } from '@/types/quiz'
+import type { PlayerAnswer, PlayerQuestion } from '@/types/quiz'
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 import { createVuetify } from 'vuetify'
@@ -9,30 +9,29 @@ import QuestionStep from './QuestionStep.vue'
 
 const vuetify = createVuetify({ components, directives })
 
-function makeAnswer (overrides: Partial<Answer> = {}): Answer {
+function makeAnswer (overrides: Partial<PlayerAnswer> = {}): PlayerAnswer {
   return {
     id: crypto.randomUUID(),
     text: 'Answer',
-    isCorrect: false,
     ...overrides,
   }
 }
 
-function makeQuestion (overrides: Partial<Question> = {}): Question {
+function makeQuestion (overrides: Partial<PlayerQuestion> = {}): PlayerQuestion {
   return {
     id: 'q-1',
     text: 'What is the capital of France?',
     answers: [
-      makeAnswer({ id: 'a1', text: 'Berlin', isCorrect: false }),
-      makeAnswer({ id: 'a2', text: 'Paris', isCorrect: true }),
-      makeAnswer({ id: 'a3', text: 'Madrid', isCorrect: false }),
+      makeAnswer({ id: 'a1', text: 'Berlin' }),
+      makeAnswer({ id: 'a2', text: 'Paris' }),
+      makeAnswer({ id: 'a3', text: 'Madrid' }),
     ],
     ...overrides,
   }
 }
 
 function mountStep (
-  question: Question = makeQuestion(),
+  question: PlayerQuestion = makeQuestion(),
   props: Record<string, unknown> = {},
 ): VueWrapper {
   return mount(QuestionStep, {
@@ -251,6 +250,53 @@ describe('QuestionStep', () => {
       await wrapper.find('[data-testid="next-btn"]').trigger('click')
 
       expect(wrapper.emitted('next')).toBeTruthy()
+    })
+  })
+
+  describe('regression: correct answer must not be visually distinguishable before confirmation', () => {
+    it('should render all answer cards with identical classes before any selection', () => {
+      const wrapper = mountStep()
+
+      const answerCards = wrapper.findAll('[data-testid^="answer-option-"]')
+      const classLists = answerCards.map(card =>
+        [...card.classes()].sort().join(','),
+      )
+
+      // Every card must share the exact same class set
+      for (const cl of classLists) {
+        expect(cl).toBe(classLists[0])
+      }
+    })
+
+    it('should not expose isCorrect as a DOM attribute on any answer card', () => {
+      const wrapper = mountStep()
+
+      const html = wrapper.html()
+      expect(html).not.toContain('iscorrect')
+      expect(html).not.toContain('is-correct')
+    })
+
+    it('should not disable or grey out the correct answer before confirmation', () => {
+      const wrapper = mountStep()
+
+      // The correct answer is at index 1 (Paris, isCorrect: true)
+      const correctCard = wrapper.find('[data-testid="answer-option-1"]')
+      expect(correctCard.classes()).not.toContain('v-card--disabled')
+      expect(correctCard.attributes('disabled')).toBeUndefined()
+      expect(correctCard.attributes('aria-disabled')).toBeUndefined()
+    })
+
+    it('should give all answers the same variant before confirmation', () => {
+      const wrapper = mountStep()
+
+      const answerCards = wrapper.findAll('[data-testid^="answer-option-"]')
+      const variants = answerCards.map(card =>
+        card.classes().find(c => c.startsWith('v-card--variant-')),
+      )
+
+      for (const v of variants) {
+        expect(v).toBe(variants[0])
+      }
     })
   })
 

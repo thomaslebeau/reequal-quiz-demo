@@ -25,7 +25,7 @@
         <QuestionStep
           data-testid="question-step"
           :feedback-result="feedbackResult ?? undefined"
-          :question="player.currentQuestion.value!"
+          :question="playerQuestion!"
           :selected-answer-id="lastSelectedAnswerId ?? undefined"
           @answer="handleAnswer"
           @next="handleNext"
@@ -48,8 +48,8 @@
 </template>
 
 <script setup lang="ts">
-  import type { QuestionResult, Quiz } from '@/types/quiz'
-  import { ref } from 'vue'
+  import type { PlayerQuestion, QuestionResult, Quiz } from '@/types/quiz'
+  import { computed, ref } from 'vue'
   import ProgressPath from '@/components/ui/ProgressPath.vue'
   import { type SubmitResult, useQuizPlayer } from '@/composables/useQuizPlayer'
   import QuestionStep from './QuestionStep.vue'
@@ -64,6 +64,16 @@
   }>()
 
   const player = useQuizPlayer(props.quiz)
+
+  const playerQuestion = computed<PlayerQuestion | undefined>(() => {
+    const q = player.currentQuestion.value
+    if (!q) return undefined
+    return {
+      id: q.id,
+      text: q.text,
+      answers: q.answers.map(({ id, text }) => ({ id, text })),
+    }
+  })
 
   const feedbackResult = ref<SubmitResult | null>(null)
   const lastSelectedAnswerId = ref<string | null>(null)

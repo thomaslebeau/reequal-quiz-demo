@@ -4,10 +4,21 @@ export interface Answer {
   isCorrect: boolean
 }
 
+export interface PlayerAnswer {
+  id: string
+  text: string
+}
+
 export interface Question {
   id: string
   text: string
   answers: Answer[]
+}
+
+export interface PlayerQuestion {
+  id: string
+  text: string
+  answers: PlayerAnswer[]
 }
 
 export interface Quiz {

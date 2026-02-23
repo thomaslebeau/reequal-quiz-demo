@@ -85,12 +85,12 @@
 
 <script setup lang="ts">
   import type { SubmitResult } from '@/composables/useQuizPlayer'
-  import type { Question } from '@/types/quiz'
+  import type { PlayerQuestion } from '@/types/quiz'
   import { nextTick, onMounted, ref, watch } from 'vue'
   import { getGsap } from '@/composables/useGsap'
 
   const props = defineProps<{
-    question: Question
+    question: PlayerQuestion
     feedbackResult?: SubmitResult
     selectedAnswerId?: string
   }>()
@@ -134,7 +134,7 @@
     if (!gsap || !answersRef.value) return
     const cards = answersRef.value.querySelectorAll('.answer-option')
     if (cards.length === 0) return
-    gsap.from(cards, { scale: 0, opacity: 0, stagger: 0.08, duration: 0.4, ease: 'back.out(1.4)' })
+    gsap.from(cards, { scale: 0, opacity: 0, stagger: 0.08, duration: 0.4, ease: 'back.out(1.4)', clearProps: 'all' })
   }
 
   onMounted(animateAnswersIn)

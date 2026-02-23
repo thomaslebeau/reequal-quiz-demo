@@ -248,6 +248,19 @@ describe('QuizPlayer', () => {
     })
   })
 
+  describe('regression: correct answer must not leak to QuestionStep', () => {
+    it('should not pass isCorrect data in the question prop to QuestionStep', () => {
+      const wrapper = mountPlayer()
+
+      const questionStep = wrapper.findComponent({ name: 'QuestionStep' })
+      const question = questionStep.props('question')
+
+      for (const answer of question.answers) {
+        expect(answer).not.toHaveProperty('isCorrect')
+      }
+    })
+  })
+
   describe('design', () => {
     it('should wrap the player in a v-card', () => {
       const wrapper = mountPlayer()
