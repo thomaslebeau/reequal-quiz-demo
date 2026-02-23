@@ -1,5 +1,5 @@
 <template>
-  <v-card rounded="xl" elevation="2" class="score-screen text-center">
+  <v-card class="score-screen text-center" elevation="2" rounded="xl">
     <v-card-item>
       <v-card-title class="text-h5 font-weight-bold">
         Your Score
@@ -8,9 +8,9 @@
 
     <v-card-text>
       <v-progress-circular
+        :color="progressColor"
         data-testid="score-progress"
         :model-value="percentage"
-        :color="progressColor"
         :size="120"
         :width="10"
       >
@@ -22,11 +22,11 @@
       </div>
 
       <v-alert
+        class="mt-4"
         data-testid="result-message"
+        density="compact"
         :type="isPassing ? 'success' : 'info'"
         variant="tonal"
-        density="compact"
-        class="mt-4"
       >
         {{ isPassing ? 'Great job!' : 'Keep practicing!' }}
       </v-alert>
@@ -42,23 +42,23 @@
       <v-card
         v-for="(result, i) in results"
         :key="i"
-        :data-testid="`recap-item-${i}`"
-        variant="tonal"
-        rounded="lg"
         class="mb-2 text-left"
+        :data-testid="`recap-item-${i}`"
+        rounded="lg"
+        variant="tonal"
       >
         <v-card-text class="d-flex align-center ga-3 py-2">
           <v-icon
             v-if="result.correct"
+            color="success"
             data-testid="recap-icon-correct"
             icon="mdi-check-circle"
-            color="success"
           />
           <v-icon
             v-else
+            color="error"
             data-testid="recap-icon-incorrect"
             icon="mdi-close-circle"
-            color="error"
           />
 
           <div>
@@ -73,11 +73,11 @@
 
     <v-card-actions class="justify-center pb-4">
       <v-btn
-        data-testid="play-again-btn"
         color="secondary"
-        variant="flat"
-        size="large"
+        data-testid="play-again-btn"
         prepend-icon="mdi-replay"
+        size="large"
+        variant="flat"
         @click="$emit('restart')"
       >
         Play again
@@ -87,26 +87,26 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import type { QuestionResult } from '@/types/quiz'
+  import type { QuestionResult } from '@/types/quiz'
+  import { computed } from 'vue'
 
-const props = defineProps<{
-  score: number
-  total: number
-  results: QuestionResult[]
-}>()
+  const props = defineProps<{
+    score: number
+    total: number
+    results: QuestionResult[]
+  }>()
 
-defineEmits<{
-  restart: []
-}>()
+  defineEmits<{
+    restart: []
+  }>()
 
-const percentage = computed(() =>
-  props.total > 0 ? Math.round((props.score / props.total) * 100) : 0,
-)
+  const percentage = computed(() =>
+    props.total > 0 ? Math.round((props.score / props.total) * 100) : 0,
+  )
 
-const isPassing = computed(() => percentage.value >= 70)
+  const isPassing = computed(() => percentage.value >= 70)
 
-const progressColor = computed(() =>
-  isPassing.value ? 'success' : 'warning',
-)
+  const progressColor = computed(() =>
+    isPassing.value ? 'success' : 'warning',
+  )
 </script>

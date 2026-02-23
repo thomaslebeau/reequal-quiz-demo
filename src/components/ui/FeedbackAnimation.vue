@@ -2,16 +2,16 @@
   <div class="feedback-animation">
     <div
       v-if="visible"
-      data-testid="feedback-content"
       class="d-flex flex-column align-center"
       :class="correct ? 'feedback-correct' : 'feedback-incorrect'"
+      data-testid="feedback-content"
     >
       <v-icon
+        class="mb-2"
+        :color="correct ? 'success' : 'error'"
         data-testid="feedback-icon"
         :icon="correct ? 'mdi-check-circle' : 'mdi-close-circle'"
-        :color="correct ? 'success' : 'error'"
         size="64"
-        class="mb-2"
       />
       <span class="text-h6 font-weight-bold" :class="correct ? 'text-success' : 'text-error'">
         {{ correct ? 'Correct!' : 'Incorrect' }}
@@ -21,10 +21,10 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{
-  correct: boolean
-  visible: boolean
-}>()
+  defineProps<{
+    correct: boolean
+    visible: boolean
+  }>()
 </script>
 
 <style scoped>

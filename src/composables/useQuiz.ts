@@ -1,10 +1,10 @@
+import type { Answer, Question, Quiz } from '@/types/quiz'
 import { useQuizStore } from '@/stores/quizStore'
-import type { Quiz, Question, Answer } from '@/types/quiz'
 
-export function useQuiz() {
+export function useQuiz () {
   const store = useQuizStore()
 
-  function createQuiz(title: string): Quiz {
+  function createQuiz (title: string): Quiz {
     return {
       id: crypto.randomUUID(),
       title,
@@ -14,7 +14,7 @@ export function useQuiz() {
     }
   }
 
-  function createQuestion(text: string): Question {
+  function createQuestion (text: string): Question {
     return {
       id: crypto.randomUUID(),
       text,
@@ -22,7 +22,7 @@ export function useQuiz() {
     }
   }
 
-  function createAnswer(text: string, isCorrect = false): Answer {
+  function createAnswer (text: string, isCorrect = false): Answer {
     return {
       id: crypto.randomUUID(),
       text,
@@ -30,11 +30,11 @@ export function useQuiz() {
     }
   }
 
-  function saveQuiz(quiz: Quiz): void {
+  function saveQuiz (quiz: Quiz): void {
     store.addQuiz(quiz)
   }
 
-  function removeQuiz(id: string): void {
+  function removeQuiz (id: string): void {
     store.deleteQuiz(id)
   }
 

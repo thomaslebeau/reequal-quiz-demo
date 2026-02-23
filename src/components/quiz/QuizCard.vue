@@ -1,8 +1,8 @@
 <template>
-  <v-card rounded="xl" class="quiz-card" elevation="2">
+  <v-card class="quiz-card" elevation="2" rounded="xl">
     <v-card-item>
       <template #prepend>
-        <v-avatar color="primary" variant="tonal" size="48">
+        <v-avatar color="primary" size="48" variant="tonal">
           <v-icon icon="mdi-clipboard-text-outline" />
         </v-avatar>
       </template>
@@ -17,27 +17,27 @@
     </v-card-item>
 
     <v-card-text>
-      <v-chip color="primary" variant="tonal" size="small">
+      <v-chip color="primary" size="small" variant="tonal">
         {{ quiz.questions.length }} {{ quiz.questions.length === 1 ? 'question' : 'questions' }}
       </v-chip>
     </v-card-text>
 
     <v-card-actions>
       <v-btn
-        data-testid="edit-btn"
-        variant="text"
         color="primary"
+        data-testid="edit-btn"
         prepend-icon="mdi-pencil-outline"
+        variant="text"
         @click="$emit('edit', quiz.id)"
       >
         Edit
       </v-btn>
 
       <v-btn
-        data-testid="delete-btn"
-        variant="text"
         color="error"
+        data-testid="delete-btn"
         prepend-icon="mdi-delete-outline"
+        variant="text"
         @click="$emit('delete', quiz.id)"
       >
         Delete
@@ -46,10 +46,10 @@
       <v-spacer />
 
       <v-btn
-        data-testid="play-btn"
-        variant="flat"
         color="secondary"
+        data-testid="play-btn"
         prepend-icon="mdi-play"
+        variant="flat"
         @click="$emit('play', quiz.id)"
       >
         Play
@@ -59,24 +59,24 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import type { Quiz } from '@/types/quiz'
+  import type { Quiz } from '@/types/quiz'
+  import { computed } from 'vue'
 
-const props = defineProps<{
-  quiz: Quiz
-}>()
+  const props = defineProps<{
+    quiz: Quiz
+  }>()
 
-defineEmits<{
-  edit: [id: string]
-  delete: [id: string]
-  play: [id: string]
-}>()
+  defineEmits<{
+    edit: [id: string]
+    delete: [id: string]
+    play: [id: string]
+  }>()
 
-const formattedDate = computed(() =>
-  props.quiz.updatedAt.toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  }),
-)
+  const formattedDate = computed(() =>
+    props.quiz.updatedAt.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    }),
+  )
 </script>

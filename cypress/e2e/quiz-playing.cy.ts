@@ -32,7 +32,7 @@ describe('Quiz Playing Flow', () => {
     updatedAt: new Date('2026-01-15').toISOString(),
   }
 
-  function seedStore() {
+  function seedStore () {
     cy.window().then((win: any) => {
       const store = win.__quizStore__
       // Dates need to be rehydrated from plain object
@@ -47,7 +47,7 @@ describe('Quiz Playing Flow', () => {
   beforeEach(() => {
     cy.visit('/')
     // Wait for the app to fully render
-    cy.contains('h1', 'Quizzes', { timeout: 10000 })
+    cy.contains('h1', 'Quizzes', { timeout: 10_000 })
     seedStore()
     // Wait for the seeded quiz to appear in the DOM
     cy.contains('E2E Test Quiz')

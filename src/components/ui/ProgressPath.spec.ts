@@ -1,5 +1,6 @@
-import { describe, it, expect } from 'vitest'
-import { mount, VueWrapper } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
+import { describe, expect, it } from 'vitest'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
@@ -7,7 +8,7 @@ import ProgressPath from './ProgressPath.vue'
 
 const vuetify = createVuetify({ components, directives })
 
-function mountPath(
+function mountPath (
   total = 5,
   current = 0,
 ): VueWrapper {
@@ -101,7 +102,7 @@ describe('ProgressPath', () => {
 
       const nodes = wrapper.findAll('[data-testid^="step-node-"]')
       expect(nodes).toHaveLength(1)
-      expect(nodes[0].classes().some(c => c.includes('bg-secondary'))).toBe(true)
+      expect(nodes[0]!.classes().some(c => c.includes('bg-secondary'))).toBe(true)
     })
   })
 })

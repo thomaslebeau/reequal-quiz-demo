@@ -1,12 +1,13 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { mount, VueWrapper } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
+import type { Quiz } from '@/types/quiz'
+import { mount } from '@vue/test-utils'
+import { createPinia, setActivePinia } from 'pinia'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
-import { createPinia, setActivePinia } from 'pinia'
-import QuizPlayerView from './QuizPlayerView.vue'
 import { useQuizStore } from '@/stores/quizStore'
-import type { Quiz } from '@/types/quiz'
+import QuizPlayerView from './QuizPlayerView.vue'
 
 const vuetify = createVuetify({ components, directives })
 
@@ -16,7 +17,7 @@ vi.mock('vue-router', () => ({
   useRoute: () => ({ params: {} }),
 }))
 
-function makeQuiz(overrides: Partial<Quiz> = {}): Quiz {
+function makeQuiz (overrides: Partial<Quiz> = {}): Quiz {
   return {
     id: 'quiz-1',
     title: 'Test Quiz',
@@ -36,7 +37,8 @@ function makeQuiz(overrides: Partial<Quiz> = {}): Quiz {
   }
 }
 
-function mountView(props: { id: string } = { id: 'quiz-1' }): VueWrapper {
+const defaultProps = { id: 'quiz-1' }
+function mountView (props: { id: string } = defaultProps): VueWrapper {
   return mount(QuizPlayerView, {
     props,
     global: { plugins: [vuetify] },

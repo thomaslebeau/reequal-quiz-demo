@@ -1,10 +1,10 @@
 <template>
   <v-form class="quiz-form" @submit.prevent="handleSave">
     <v-text-field
-      data-testid="quiz-title"
       v-model="title"
-      label="Quiz title"
+      data-testid="quiz-title"
       :error-messages="titleError"
+      label="Quiz title"
     />
 
     <div
@@ -14,19 +14,19 @@
     >
       <QuestionEditor
         :data-testid="`question-editor-${i}`"
-        :question="question"
         :index="i"
+        :question="question"
         @update:question="updateQuestion(i, $event)"
       />
 
       <v-btn
-        :data-testid="`remove-question-${i}`"
-        variant="text"
-        color="error"
-        size="small"
-        prepend-icon="mdi-close"
         class="mt-1"
+        color="error"
+        :data-testid="`remove-question-${i}`"
         :disabled="questions.length <= 1"
+        prepend-icon="mdi-close"
+        size="small"
+        variant="text"
         @click="removeQuestion(i)"
       >
         Remove question
@@ -34,12 +34,12 @@
     </div>
 
     <v-btn
-      data-testid="add-question-btn"
-      variant="tonal"
-      color="primary"
-      size="small"
-      prepend-icon="mdi-plus"
       class="mb-4"
+      color="primary"
+      data-testid="add-question-btn"
+      prepend-icon="mdi-plus"
+      size="small"
+      variant="tonal"
       @click="addQuestion"
     >
       Add question
@@ -47,17 +47,17 @@
 
     <v-alert
       v-if="validationError"
+      class="mb-4"
+      density="compact"
       type="error"
       variant="tonal"
-      density="compact"
-      class="mb-4"
     >
       {{ validationError }}
     </v-alert>
 
     <v-btn
-      data-testid="save-btn"
       color="secondary"
+      data-testid="save-btn"
       variant="flat"
       @click="handleSave"
     >
@@ -67,94 +67,94 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-import type { Quiz, Question } from '@/types/quiz'
-import QuestionEditor from './QuestionEditor.vue'
+  import type { Question, Quiz } from '@/types/quiz'
+  import { ref, watch } from 'vue'
+  import QuestionEditor from './QuestionEditor.vue'
 
-const props = defineProps<{
-  quiz?: Quiz
-}>()
+  const props = defineProps<{
+    quiz?: Quiz
+  }>()
 
-const emit = defineEmits<{
-  save: [quiz: Quiz]
-}>()
+  const emit = defineEmits<{
+    save: [quiz: Quiz]
+  }>()
 
-function makeEmptyQuestion(): Question {
-  return {
-    id: crypto.randomUUID(),
-    text: '',
-    answers: [
-      { id: crypto.randomUUID(), text: '', isCorrect: false },
-      { id: crypto.randomUUID(), text: '', isCorrect: true },
-    ],
-  }
-}
-
-const title = ref(props.quiz?.title ?? '')
-const questions = ref<Question[]>(
-  props.quiz?.questions.map(q => ({ ...q })) ?? [makeEmptyQuestion()],
-)
-const validationError = ref('')
-const titleError = ref('')
-
-watch(
-  () => props.quiz,
-  (newQuiz) => {
-    if (newQuiz) {
-      title.value = newQuiz.title
-      questions.value = newQuiz.questions.map(q => ({ ...q }))
+  function makeEmptyQuestion (): Question {
+    return {
+      id: crypto.randomUUID(),
+      text: '',
+      answers: [
+        { id: crypto.randomUUID(), text: '', isCorrect: false },
+        { id: crypto.randomUUID(), text: '', isCorrect: true },
+      ],
     }
-  },
-)
-
-function updateQuestion(index: number, updated: Question) {
-  questions.value[index] = updated
-}
-
-function addQuestion() {
-  questions.value.push(makeEmptyQuestion())
-}
-
-function removeQuestion(index: number) {
-  questions.value.splice(index, 1)
-}
-
-function validate(): boolean {
-  validationError.value = ''
-  titleError.value = ''
-
-  if (!title.value.trim()) {
-    titleError.value = 'Quiz title is required'
-    validationError.value = 'Quiz title is required'
-    return false
   }
 
-  for (const question of questions.value) {
-    if (!question.text.trim()) {
-      validationError.value = 'Each question must have text'
+  const title = ref(props.quiz?.title ?? '')
+  const questions = ref<Question[]>(
+    props.quiz?.questions.map(q => ({ ...q })) ?? [makeEmptyQuestion()],
+  )
+  const validationError = ref('')
+  const titleError = ref('')
+
+  watch(
+    () => props.quiz,
+    newQuiz => {
+      if (newQuiz) {
+        title.value = newQuiz.title
+        questions.value = newQuiz.questions.map(q => ({ ...q }))
+      }
+    },
+  )
+
+  function updateQuestion (index: number, updated: Question) {
+    questions.value[index] = updated
+  }
+
+  function addQuestion () {
+    questions.value.push(makeEmptyQuestion())
+  }
+
+  function removeQuestion (index: number) {
+    questions.value.splice(index, 1)
+  }
+
+  function validate (): boolean {
+    validationError.value = ''
+    titleError.value = ''
+
+    if (!title.value.trim()) {
+      titleError.value = 'Quiz title is required'
+      validationError.value = 'Quiz title is required'
       return false
     }
 
-    if (!question.answers.some(a => a.isCorrect)) {
-      validationError.value = 'Each question must have a correct answer'
-      return false
+    for (const question of questions.value) {
+      if (!question.text.trim()) {
+        validationError.value = 'Each question must have text'
+        return false
+      }
+
+      if (!question.answers.some(a => a.isCorrect)) {
+        validationError.value = 'Each question must have a correct answer'
+        return false
+      }
     }
+
+    return true
   }
 
-  return true
-}
+  function handleSave () {
+    if (!validate()) return
 
-function handleSave() {
-  if (!validate()) return
+    const quiz: Quiz = {
+      id: props.quiz?.id ?? crypto.randomUUID(),
+      title: title.value,
+      questions: questions.value,
+      createdAt: props.quiz?.createdAt ?? new Date(),
+      updatedAt: new Date(),
+    }
 
-  const quiz: Quiz = {
-    id: props.quiz?.id ?? crypto.randomUUID(),
-    title: title.value,
-    questions: questions.value,
-    createdAt: props.quiz?.createdAt ?? new Date(),
-    updatedAt: new Date(),
+    emit('save', quiz)
   }
-
-  emit('save', quiz)
-}
 </script>

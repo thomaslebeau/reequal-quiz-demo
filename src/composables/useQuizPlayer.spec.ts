@@ -1,8 +1,8 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import type { Answer, Question, Quiz } from '@/types/quiz'
+import { describe, expect, it } from 'vitest'
 import { useQuizPlayer } from './useQuizPlayer'
-import type { Quiz, Question, Answer } from '@/types/quiz'
 
-function makeAnswer(overrides: Partial<Answer> = {}): Answer {
+function makeAnswer (overrides: Partial<Answer> = {}): Answer {
   return {
     id: crypto.randomUUID(),
     text: 'Answer',
@@ -11,7 +11,7 @@ function makeAnswer(overrides: Partial<Answer> = {}): Answer {
   }
 }
 
-function makeQuestion(overrides: Partial<Question> = {}): Question {
+function makeQuestion (overrides: Partial<Question> = {}): Question {
   return {
     id: crypto.randomUUID(),
     text: 'Question',
@@ -20,7 +20,7 @@ function makeQuestion(overrides: Partial<Question> = {}): Question {
   }
 }
 
-function makeQuiz(questions: Question[]): Quiz {
+function makeQuiz (questions: Question[]): Quiz {
   return {
     id: 'quiz-1',
     title: 'Test Quiz',
@@ -30,7 +30,7 @@ function makeQuiz(questions: Question[]): Quiz {
   }
 }
 
-function buildThreeQuestionQuiz() {
+function buildThreeQuestionQuiz () {
   const q1 = makeQuestion({
     text: 'Q1',
     answers: [

@@ -1,14 +1,15 @@
-import { describe, it, expect } from 'vitest'
-import { mount, VueWrapper } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
+import type { Answer, Question, Quiz } from '@/types/quiz'
+import { mount } from '@vue/test-utils'
+import { describe, expect, it } from 'vitest'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import QuizPlayer from './QuizPlayer.vue'
-import type { Quiz, Answer, Question } from '@/types/quiz'
 
 const vuetify = createVuetify({ components, directives })
 
-function makeAnswer(overrides: Partial<Answer> = {}): Answer {
+function makeAnswer (overrides: Partial<Answer> = {}): Answer {
   return {
     id: crypto.randomUUID(),
     text: 'Answer',
@@ -17,7 +18,7 @@ function makeAnswer(overrides: Partial<Answer> = {}): Answer {
   }
 }
 
-function makeQuestion(overrides: Partial<Question> = {}): Question {
+function makeQuestion (overrides: Partial<Question> = {}): Question {
   return {
     id: crypto.randomUUID(),
     text: 'Sample question',
@@ -29,7 +30,7 @@ function makeQuestion(overrides: Partial<Question> = {}): Question {
   }
 }
 
-function makeTwoQuestionQuiz(): Quiz {
+function makeTwoQuestionQuiz (): Quiz {
   return {
     id: 'quiz-1',
     title: 'Test Quiz',
@@ -56,14 +57,14 @@ function makeTwoQuestionQuiz(): Quiz {
   }
 }
 
-function mountPlayer(quiz: Quiz = makeTwoQuestionQuiz()): VueWrapper {
+function mountPlayer (quiz: Quiz = makeTwoQuestionQuiz()): VueWrapper {
   return mount(QuizPlayer, {
     props: { quiz },
     global: { plugins: [vuetify] },
   })
 }
 
-async function selectAndConfirm(
+async function selectAndConfirm (
   wrapper: VueWrapper,
   answerIndex: number,
 ): Promise<void> {
@@ -73,7 +74,7 @@ async function selectAndConfirm(
   await wrapper.find('[data-testid="confirm-btn"]').trigger('click')
 }
 
-async function advancePastQuestion(
+async function advancePastQuestion (
   wrapper: VueWrapper,
   answerIndex: number,
 ): Promise<void> {

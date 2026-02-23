@@ -1,9 +1,9 @@
-import Components from 'unplugin-vue-components/vite'
+import { fileURLToPath, URL } from 'node:url'
 import Vue from '@vitejs/plugin-vue'
-import Vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
+import Components from 'unplugin-vue-components/vite'
 
 import { defineConfig, type UserConfig } from 'vite'
-import { fileURLToPath, URL } from 'node:url'
+import Vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 
 export default defineConfig({
   plugins: [

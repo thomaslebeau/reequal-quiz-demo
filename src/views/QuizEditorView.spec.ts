@@ -1,12 +1,13 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { mount, VueWrapper } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
+import type { Quiz } from '@/types/quiz'
+import { mount } from '@vue/test-utils'
+import { createPinia, setActivePinia } from 'pinia'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
-import { createPinia, setActivePinia } from 'pinia'
-import QuizEditorView from './QuizEditorView.vue'
 import { useQuizStore } from '@/stores/quizStore'
-import type { Quiz } from '@/types/quiz'
+import QuizEditorView from './QuizEditorView.vue'
 
 const vuetify = createVuetify({ components, directives })
 
@@ -16,7 +17,7 @@ vi.mock('vue-router', () => ({
   useRoute: () => ({ params: {} }),
 }))
 
-function makeQuiz(overrides: Partial<Quiz> = {}): Quiz {
+function makeQuiz (overrides: Partial<Quiz> = {}): Quiz {
   return {
     id: 'quiz-1',
     title: 'Existing Quiz',
@@ -36,7 +37,7 @@ function makeQuiz(overrides: Partial<Quiz> = {}): Quiz {
   }
 }
 
-function mountView(props: { id?: string } = {}): VueWrapper {
+function mountView (props: { id?: string } = {}): VueWrapper {
   return mount(QuizEditorView, {
     props,
     global: { plugins: [vuetify] },
@@ -66,7 +67,7 @@ describe('QuizEditorView', () => {
       const wrapper = mountView()
 
       const input = wrapper.find('[data-testid="quiz-title"] input')
-      expect(input.element.value).toBe('')
+      expect((input.element as HTMLInputElement).value).toBe('')
     })
 
     it('should add the quiz to the store when save is emitted', async () => {
@@ -82,7 +83,7 @@ describe('QuizEditorView', () => {
       await wrapper.find('[data-testid="save-btn"]').trigger('click')
 
       expect(store.quizzes).toHaveLength(1)
-      expect(store.quizzes[0].title).toBe('New Created Quiz')
+      expect(store.quizzes[0]!.title).toBe('New Created Quiz')
     })
 
     it('should navigate to the quiz list after saving', async () => {
@@ -117,7 +118,7 @@ describe('QuizEditorView', () => {
       const wrapper = mountView({ id: 'quiz-1' })
 
       const input = wrapper.find('[data-testid="quiz-title"] input')
-      expect(input.element.value).toBe('Loaded Quiz')
+      expect((input.element as HTMLInputElement).value).toBe('Loaded Quiz')
     })
 
     it('should update the quiz in the store when save is emitted in edit mode', async () => {
@@ -132,7 +133,7 @@ describe('QuizEditorView', () => {
       await wrapper.find('[data-testid="save-btn"]').trigger('click')
 
       expect(store.quizzes).toHaveLength(1)
-      expect(store.quizzes[0].title).toBe('Updated Quiz Title')
+      expect(store.quizzes[0]!.title).toBe('Updated Quiz Title')
     })
 
     it('should navigate to the quiz list after updating', async () => {

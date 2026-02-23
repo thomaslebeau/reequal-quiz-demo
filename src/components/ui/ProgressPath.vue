@@ -2,12 +2,12 @@
   <div class="progress-path">
     <div class="progress-path__track">
       <v-progress-linear
-        :model-value="progressPercent"
-        color="secondary"
         bg-color="grey-lighten-2"
-        height="6"
-        rounded
         class="progress-path__line"
+        color="secondary"
+        height="6"
+        :model-value="progressPercent"
+        rounded
       />
     </div>
 
@@ -15,9 +15,9 @@
       <div
         v-for="(step, i) in total"
         :key="i"
-        :data-testid="`step-node-${i}`"
         class="progress-path__node"
         :class="nodeClass(i)"
+        :data-testid="`step-node-${i}`"
       >
         <v-icon v-if="i < current" icon="mdi-check" size="16" />
         <span v-else class="text-caption font-weight-bold">{{ i + 1 }}</span>
@@ -27,29 +27,29 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+  import { computed } from 'vue'
 
-const props = defineProps<{
-  total: number
-  current: number
-}>()
+  const props = defineProps<{
+    total: number
+    current: number
+  }>()
 
-const progressPercent = computed(() =>
-  props.total > 0
-    ? Math.round((props.current / props.total) * 100)
-    : 0,
-)
+  const progressPercent = computed(() =>
+    props.total > 0
+      ? Math.round((props.current / props.total) * 100)
+      : 0,
+  )
 
-function nodeClass(index: number): Record<string, boolean> {
-  return {
-    'bg-primary': index < props.current,
-    'bg-secondary': index === props.current,
-    'bg-grey': index > props.current,
-    'progress-path__node--completed': index < props.current,
-    'progress-path__node--current': index === props.current,
-    'progress-path__node--upcoming': index > props.current,
+  function nodeClass (index: number): Record<string, boolean> {
+    return {
+      'bg-primary': index < props.current,
+      'bg-secondary': index === props.current,
+      'bg-grey': index > props.current,
+      'progress-path__node--completed': index < props.current,
+      'progress-path__node--current': index === props.current,
+      'progress-path__node--upcoming': index > props.current,
+    }
   }
-}
 </script>
 
 <style scoped>

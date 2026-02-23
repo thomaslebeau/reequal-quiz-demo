@@ -1,14 +1,15 @@
-import { describe, it, expect } from 'vitest'
-import { mount, VueWrapper } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
+import type { QuestionResult } from '@/types/quiz'
+import { mount } from '@vue/test-utils'
+import { describe, expect, it } from 'vitest'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import ScoreScreen from './ScoreScreen.vue'
-import type { QuestionResult } from '@/types/quiz'
 
 const vuetify = createVuetify({ components, directives })
 
-function makeResult(overrides: Partial<QuestionResult> = {}): QuestionResult {
+function makeResult (overrides: Partial<QuestionResult> = {}): QuestionResult {
   return {
     questionText: 'Sample question',
     correct: true,
@@ -18,7 +19,7 @@ function makeResult(overrides: Partial<QuestionResult> = {}): QuestionResult {
   }
 }
 
-function mountScreen(
+function mountScreen (
   props: {
     score?: number
     total?: number
@@ -139,8 +140,8 @@ describe('ScoreScreen', () => {
       const wrapper = mountScreen()
 
       const recapItems = wrapper.findAll('[data-testid^="recap-item-"]')
-      expect(recapItems[0].text()).toContain('Q1')
-      expect(recapItems[1].text()).toContain('Q2')
+      expect(recapItems[0]!.text()).toContain('Q1')
+      expect(recapItems[1]!.text()).toContain('Q2')
     })
 
     it('should show a success icon for correct answers', () => {

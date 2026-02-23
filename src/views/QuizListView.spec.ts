@@ -1,12 +1,13 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { mount, VueWrapper } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
+import type { Quiz } from '@/types/quiz'
+import { mount } from '@vue/test-utils'
+import { createPinia, setActivePinia } from 'pinia'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
-import { createPinia, setActivePinia } from 'pinia'
-import QuizListView from './QuizListView.vue'
 import { useQuizStore } from '@/stores/quizStore'
-import type { Quiz } from '@/types/quiz'
+import QuizListView from './QuizListView.vue'
 
 const vuetify = createVuetify({ components, directives })
 
@@ -16,7 +17,7 @@ vi.mock('vue-router', () => ({
   useRoute: () => ({ params: {} }),
 }))
 
-function makeQuiz(overrides: Partial<Quiz> = {}): Quiz {
+function makeQuiz (overrides: Partial<Quiz> = {}): Quiz {
   return {
     id: crypto.randomUUID(),
     title: 'Sample Quiz',
@@ -36,7 +37,7 @@ function makeQuiz(overrides: Partial<Quiz> = {}): Quiz {
   }
 }
 
-function mountView(): VueWrapper {
+function mountView (): VueWrapper {
   return mount(QuizListView, {
     global: { plugins: [vuetify] },
   })

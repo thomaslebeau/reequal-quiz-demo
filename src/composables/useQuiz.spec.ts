@@ -1,7 +1,7 @@
-import { describe, it, expect, beforeEach } from 'vitest'
-import { setActivePinia, createPinia } from 'pinia'
-import { useQuiz } from './useQuiz'
+import { createPinia, setActivePinia } from 'pinia'
+import { beforeEach, describe, expect, it } from 'vitest'
 import { useQuizStore } from '@/stores/quizStore'
+import { useQuiz } from './useQuiz'
 
 describe('useQuiz', () => {
   beforeEach(() => {
@@ -207,7 +207,7 @@ describe('useQuiz', () => {
       removeQuiz(remove.id)
 
       expect(store.quizzes).toHaveLength(1)
-      expect(store.quizzes[0].id).toBe(keep.id)
+      expect(store.quizzes[0]!.id).toBe(keep.id)
     })
 
     it('should not throw when removing a nonexistent quiz', () => {
@@ -217,7 +217,7 @@ describe('useQuiz', () => {
     })
 
     it('should decrement quizCount after removal', () => {
-      const { createQuiz, saveQuiz, removeQuiz, quizCount } = useQuiz()
+      const { createQuiz, saveQuiz, removeQuiz } = useQuiz()
       const store = useQuizStore()
 
       const quiz = createQuiz('Counted')

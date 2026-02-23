@@ -1,12 +1,12 @@
-import { ref, computed } from 'vue'
 import type { Quiz } from '@/types/quiz'
+import { computed, ref } from 'vue'
 
 export interface SubmitResult {
   correct: boolean
   correctAnswerId: string
 }
 
-export function useQuizPlayer(quiz: Quiz) {
+export function useQuizPlayer (quiz: Quiz) {
   const currentIndex = ref(0)
   const selectedAnswerId = ref<string | null>(null)
   const score = ref(0)
@@ -20,12 +20,12 @@ export function useQuizPlayer(quiz: Quiz) {
       : 0,
   )
 
-  function selectAnswer(answerId: string): void {
+  function selectAnswer (answerId: string): void {
     selectedAnswerId.value = answerId
   }
 
-  function submitAnswer(): SubmitResult {
-    const question = currentQuestion.value
+  function submitAnswer (): SubmitResult {
+    const question = currentQuestion.value!
     const correctAnswer = question.answers.find(a => a.isCorrect)
     const isCorrect = selectedAnswerId.value === correctAnswer?.id
 
@@ -41,13 +41,13 @@ export function useQuizPlayer(quiz: Quiz) {
     }
   }
 
-  function nextQuestion(): void {
+  function nextQuestion (): void {
     if (currentIndex.value < quiz.questions.length) {
       currentIndex.value++
     }
   }
 
-  function reset(): void {
+  function reset (): void {
     currentIndex.value = 0
     selectedAnswerId.value = null
     score.value = 0

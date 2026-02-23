@@ -1,14 +1,15 @@
-import { describe, it, expect } from 'vitest'
-import { mount, VueWrapper } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
+import type { Answer, Question } from '@/types/quiz'
+import { mount } from '@vue/test-utils'
+import { describe, expect, it } from 'vitest'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import QuestionStep from './QuestionStep.vue'
-import type { Question, Answer } from '@/types/quiz'
 
 const vuetify = createVuetify({ components, directives })
 
-function makeAnswer(overrides: Partial<Answer> = {}): Answer {
+function makeAnswer (overrides: Partial<Answer> = {}): Answer {
   return {
     id: crypto.randomUUID(),
     text: 'Answer',
@@ -17,7 +18,7 @@ function makeAnswer(overrides: Partial<Answer> = {}): Answer {
   }
 }
 
-function makeQuestion(overrides: Partial<Question> = {}): Question {
+function makeQuestion (overrides: Partial<Question> = {}): Question {
   return {
     id: 'q-1',
     text: 'What is the capital of France?',
@@ -30,7 +31,7 @@ function makeQuestion(overrides: Partial<Question> = {}): Question {
   }
 }
 
-function mountStep(
+function mountStep (
   question: Question = makeQuestion(),
   props: Record<string, unknown> = {},
 ): VueWrapper {
@@ -59,9 +60,9 @@ describe('QuestionStep', () => {
       const wrapper = mountStep()
 
       const answerCards = wrapper.findAll('[data-testid^="answer-option-"]')
-      expect(answerCards[0].text()).toContain('Berlin')
-      expect(answerCards[1].text()).toContain('Paris')
-      expect(answerCards[2].text()).toContain('Madrid')
+      expect(answerCards[0]!.text()).toContain('Berlin')
+      expect(answerCards[1]!.text()).toContain('Paris')
+      expect(answerCards[2]!.text()).toContain('Madrid')
     })
 
     it('should render a confirm button', () => {
@@ -133,7 +134,7 @@ describe('QuestionStep', () => {
 
       const emitted = wrapper.emitted('answer')
       expect(emitted).toBeTruthy()
-      expect(emitted![0][0]).toBe('a2')
+      expect(emitted![0]![0]).toBe('a2')
     })
 
     it('should not emit answer if no answer is selected', async () => {

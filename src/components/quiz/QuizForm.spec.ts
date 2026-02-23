@@ -1,14 +1,15 @@
-import { describe, it, expect } from 'vitest'
-import { mount, VueWrapper } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
+import type { Answer, Question, Quiz } from '@/types/quiz'
+import { mount } from '@vue/test-utils'
+import { describe, expect, it } from 'vitest'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import QuizForm from './QuizForm.vue'
-import type { Quiz, Question, Answer } from '@/types/quiz'
 
 const vuetify = createVuetify({ components, directives })
 
-function makeAnswer(overrides: Partial<Answer> = {}): Answer {
+function makeAnswer (overrides: Partial<Answer> = {}): Answer {
   return {
     id: crypto.randomUUID(),
     text: 'Answer',
@@ -17,7 +18,7 @@ function makeAnswer(overrides: Partial<Answer> = {}): Answer {
   }
 }
 
-function makeQuestion(overrides: Partial<Question> = {}): Question {
+function makeQuestion (overrides: Partial<Question> = {}): Question {
   return {
     id: crypto.randomUUID(),
     text: 'Sample question',
@@ -29,7 +30,7 @@ function makeQuestion(overrides: Partial<Question> = {}): Question {
   }
 }
 
-function makeQuiz(overrides: Partial<Quiz> = {}): Quiz {
+function makeQuiz (overrides: Partial<Quiz> = {}): Quiz {
   return {
     id: 'quiz-1',
     title: 'Test Quiz',
@@ -40,7 +41,7 @@ function makeQuiz(overrides: Partial<Quiz> = {}): Quiz {
   }
 }
 
-function mountForm(quiz?: Quiz): VueWrapper {
+function mountForm (quiz?: Quiz): VueWrapper {
   return mount(QuizForm, {
     props: quiz ? { quiz } : {},
     global: { plugins: [vuetify] },
@@ -60,14 +61,14 @@ describe('QuizForm', () => {
       const wrapper = mountForm(makeQuiz({ title: 'Existing Quiz' }))
 
       const input = wrapper.find('[data-testid="quiz-title"] input')
-      expect(input.element.value).toBe('Existing Quiz')
+      expect((input.element as HTMLInputElement).value).toBe('Existing Quiz')
     })
 
     it('should start with an empty title when no quiz prop is provided', () => {
       const wrapper = mountForm()
 
       const input = wrapper.find('[data-testid="quiz-title"] input')
-      expect(input.element.value).toBe('')
+      expect((input.element as HTMLInputElement).value).toBe('')
     })
   })
 
@@ -154,7 +155,7 @@ describe('QuizForm', () => {
       const emitted = wrapper.emitted('save')
       expect(emitted).toBeTruthy()
 
-      const saved: Quiz = emitted![0][0] as Quiz
+      const saved: Quiz = emitted![0]![0] as Quiz
       expect(saved.title).toBe('My Quiz')
       expect(saved.questions).toHaveLength(1)
       expect(saved.id).toBeDefined()
@@ -171,7 +172,7 @@ describe('QuizForm', () => {
       const emitted = wrapper.emitted('save')
       expect(emitted).toBeTruthy()
 
-      const saved: Quiz = emitted![0][0] as Quiz
+      const saved: Quiz = emitted![0]![0] as Quiz
       expect(saved.title).toBe('Changed Title')
     })
   })

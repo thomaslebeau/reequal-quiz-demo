@@ -2,7 +2,7 @@ describe('Quiz Creation Flow', () => {
   beforeEach(() => {
     cy.visit('/')
     // Wait for the app to fully render
-    cy.contains('h1', 'Quizzes', { timeout: 10000 })
+    cy.contains('h1', 'Quizzes', { timeout: 10_000 })
   })
 
   it('should show the empty state on first visit', () => {

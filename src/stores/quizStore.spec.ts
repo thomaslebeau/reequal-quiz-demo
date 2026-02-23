@@ -1,9 +1,9 @@
-import { describe, it, expect, beforeEach } from 'vitest'
-import { setActivePinia, createPinia } from 'pinia'
-import { useQuizStore } from './quizStore'
 import type { Quiz } from '@/types/quiz'
+import { createPinia, setActivePinia } from 'pinia'
+import { beforeEach, describe, expect, it } from 'vitest'
+import { useQuizStore } from './quizStore'
 
-function createTestQuiz(overrides: Partial<Quiz> = {}): Quiz {
+function createTestQuiz (overrides: Partial<Quiz> = {}): Quiz {
   return {
     id: 'quiz-1',
     title: 'Test Quiz',
@@ -111,7 +111,7 @@ describe('quizStore', () => {
       store.deleteQuiz('remove')
 
       expect(store.quizzes).toHaveLength(1)
-      expect(store.quizzes[0].id).toBe('keep')
+      expect(store.quizzes[0]!.id).toBe('keep')
     })
 
     it('should not throw when deleting a nonexistent quiz', () => {

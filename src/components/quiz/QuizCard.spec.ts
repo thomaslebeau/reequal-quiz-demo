@@ -1,14 +1,15 @@
-import { describe, it, expect, beforeEach } from 'vitest'
-import { mount, VueWrapper } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
+import type { Quiz } from '@/types/quiz'
+import { mount } from '@vue/test-utils'
+import { describe, expect, it } from 'vitest'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import QuizCard from './QuizCard.vue'
-import type { Quiz } from '@/types/quiz'
 
 const vuetify = createVuetify({ components, directives })
 
-function makeQuiz(overrides: Partial<Quiz> = {}): Quiz {
+function makeQuiz (overrides: Partial<Quiz> = {}): Quiz {
   return {
     id: 'quiz-1',
     title: 'JavaScript Basics',
@@ -23,7 +24,7 @@ function makeQuiz(overrides: Partial<Quiz> = {}): Quiz {
   }
 }
 
-function mountCard(quiz: Quiz = makeQuiz()): VueWrapper {
+function mountCard (quiz: Quiz = makeQuiz()): VueWrapper {
   return mount(QuizCard, {
     props: { quiz },
     global: {

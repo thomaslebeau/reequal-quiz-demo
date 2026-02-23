@@ -1,14 +1,15 @@
-import { describe, it, expect } from 'vitest'
-import { mount, VueWrapper } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
+import type { Answer, Question } from '@/types/quiz'
+import { mount } from '@vue/test-utils'
+import { describe, expect, it } from 'vitest'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import QuestionEditor from './QuestionEditor.vue'
-import type { Question, Answer } from '@/types/quiz'
 
 const vuetify = createVuetify({ components, directives })
 
-function makeAnswer(overrides: Partial<Answer> = {}): Answer {
+function makeAnswer (overrides: Partial<Answer> = {}): Answer {
   return {
     id: crypto.randomUUID(),
     text: '',
@@ -17,7 +18,7 @@ function makeAnswer(overrides: Partial<Answer> = {}): Answer {
   }
 }
 
-function makeQuestion(overrides: Partial<Question> = {}): Question {
+function makeQuestion (overrides: Partial<Question> = {}): Question {
   return {
     id: 'q-1',
     text: 'What is 2+2?',
@@ -29,7 +30,7 @@ function makeQuestion(overrides: Partial<Question> = {}): Question {
   }
 }
 
-function mountEditor(
+function mountEditor (
   question: Question = makeQuestion(),
   index = 0,
 ): VueWrapper {
@@ -54,7 +55,7 @@ describe('QuestionEditor', () => {
       expect(input.exists()).toBe(true)
 
       const inputEl = input.find('input')
-      expect(inputEl.element.value).toBe('What is 2+2?')
+      expect((inputEl.element as HTMLInputElement).value).toBe('What is 2+2?')
     })
 
     it('should render a text input for each answer', () => {
@@ -77,8 +78,8 @@ describe('QuestionEditor', () => {
       const first = wrapper.find('[data-testid="answer-text-0"] input')
       const second = wrapper.find('[data-testid="answer-text-1"] input')
 
-      expect(first.element.value).toBe('Three')
-      expect(second.element.value).toBe('Four')
+      expect((first.element as HTMLInputElement).value).toBe('Three')
+      expect((second.element as HTMLInputElement).value).toBe('Four')
     })
 
     it('should render a v-card wrapping the editor', () => {
@@ -102,8 +103,8 @@ describe('QuestionEditor', () => {
       const toggle1 = wrapper.find('[data-testid="correct-toggle-0"]')
       const toggle2 = wrapper.find('[data-testid="correct-toggle-1"]')
 
-      expect(toggle1.find('input').element.checked).toBe(false)
-      expect(toggle2.find('input').element.checked).toBe(true)
+      expect((toggle1.find('input').element as HTMLInputElement).checked).toBe(false)
+      expect((toggle2.find('input').element as HTMLInputElement).checked).toBe(true)
     })
 
     it('should emit update:question with new correct answer when toggled', async () => {
@@ -115,9 +116,9 @@ describe('QuestionEditor', () => {
       const emitted = wrapper.emitted('update:question')
       expect(emitted).toBeTruthy()
 
-      const updated: Question = emitted![emitted!.length - 1][0] as Question
-      expect(updated.answers[0].isCorrect).toBe(true)
-      expect(updated.answers[1].isCorrect).toBe(false)
+      const updated: Question = (emitted![emitted!.length - 1] as unknown[])[0] as Question
+      expect(updated.answers[0]!.isCorrect).toBe(true)
+      expect(updated.answers[1]!.isCorrect).toBe(false)
     })
   })
 
@@ -131,7 +132,7 @@ describe('QuestionEditor', () => {
       const emitted = wrapper.emitted('update:question')
       expect(emitted).toBeTruthy()
 
-      const updated: Question = emitted![emitted!.length - 1][0] as Question
+      const updated: Question = (emitted![emitted!.length - 1] as unknown[])[0] as Question
       expect(updated.text).toBe('New question text')
     })
   })
@@ -146,8 +147,8 @@ describe('QuestionEditor', () => {
       const emitted = wrapper.emitted('update:question')
       expect(emitted).toBeTruthy()
 
-      const updated: Question = emitted![emitted!.length - 1][0] as Question
-      expect(updated.answers[0].text).toBe('Updated answer')
+      const updated: Question = (emitted![emitted!.length - 1] as unknown[])[0] as Question
+      expect(updated.answers[0]!.text).toBe('Updated answer')
     })
   })
 
@@ -166,11 +167,11 @@ describe('QuestionEditor', () => {
       const emitted = wrapper.emitted('update:question')
       expect(emitted).toBeTruthy()
 
-      const updated: Question = emitted![emitted!.length - 1][0] as Question
+      const updated: Question = (emitted![emitted!.length - 1] as unknown[])[0] as Question
       expect(updated.answers).toHaveLength(3)
-      expect(updated.answers[2].text).toBe('')
-      expect(updated.answers[2].isCorrect).toBe(false)
-      expect(updated.answers[2].id).toBeDefined()
+      expect(updated.answers[2]!.text).toBe('')
+      expect(updated.answers[2]!.isCorrect).toBe(false)
+      expect(updated.answers[2]!.id).toBeDefined()
     })
 
     it('should disable the add button when there are already 4 answers', () => {
@@ -219,7 +220,7 @@ describe('QuestionEditor', () => {
       const emitted = wrapper.emitted('update:question')
       expect(emitted).toBeTruthy()
 
-      const updated: Question = emitted![emitted!.length - 1][0] as Question
+      const updated: Question = (emitted![emitted!.length - 1] as unknown[])[0] as Question
       expect(updated.answers).toHaveLength(2)
       expect(updated.answers.map(a => a.id)).toEqual(['a1', 'a3'])
     })

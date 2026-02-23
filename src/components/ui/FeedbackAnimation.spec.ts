@@ -1,5 +1,6 @@
-import { describe, it, expect } from 'vitest'
-import { mount, VueWrapper } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
+import { describe, expect, it } from 'vitest'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
@@ -7,7 +8,7 @@ import FeedbackAnimation from './FeedbackAnimation.vue'
 
 const vuetify = createVuetify({ components, directives })
 
-function mountFeedback(
+function mountFeedback (
   correct: boolean,
   visible: boolean,
 ): VueWrapper {
