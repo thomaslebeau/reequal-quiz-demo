@@ -59,6 +59,10 @@ const props = defineProps<{
   quiz: Quiz
 }>()
 
+const emit = defineEmits<{
+  restart: []
+}>()
+
 const player = useQuizPlayer(props.quiz)
 
 const feedbackResult = ref<SubmitResult | null>(null)
@@ -95,5 +99,6 @@ function handleRestart() {
   lastSelectedAnswerId.value = null
   questionResults.value = []
   player.reset()
+  emit('restart')
 }
 </script>
