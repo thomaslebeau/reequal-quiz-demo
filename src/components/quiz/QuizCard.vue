@@ -9,7 +9,7 @@
           size="52"
           variant="flat"
         >
-          <v-icon color="white" icon="mdi-clipboard-text-outline" size="28" />
+          <v-icon color="on-secondary" icon="mdi-clipboard-text-outline" size="28" />
         </v-avatar>
 
         <div class="flex-grow-1">
@@ -88,12 +88,12 @@
 
 <style scoped>
   .quiz-card {
-    box-shadow: 0 2px 12px rgba(45, 27, 105, 0.08);
+    box-shadow: 0 2px 12px rgba(var(--v-theme-primary), 0.08);
     transition: box-shadow 0.3s ease, transform 0.3s ease;
   }
 
   .quiz-card:hover {
-    box-shadow: 0 4px 20px rgba(45, 27, 105, 0.14);
+    box-shadow: 0 4px 20px rgba(var(--v-theme-primary), 0.14);
     transform: translateY(-2px);
   }
 

@@ -2,6 +2,7 @@
   <v-container class="quiz-editor-view" style="max-width: 800px;">
     <div class="d-flex align-center ga-2 mb-6">
       <v-btn
+        aria-label="Back to quiz list"
         color="primary"
         data-testid="back-btn"
         icon="mdi-arrow-left"

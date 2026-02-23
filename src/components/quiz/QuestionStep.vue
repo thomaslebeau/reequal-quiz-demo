@@ -11,13 +11,19 @@
         <v-card
           v-for="(answer, i) in question.answers"
           :key="answer.id"
+          :aria-label="answer.text"
+          :aria-selected="selectedId === answer.id"
           class="mb-3 answer-option"
           :class="answerCardClass(answer.id)"
           :data-testid="`answer-option-${i}`"
           :disabled="!!feedbackResult"
+          role="button"
           rounded="lg"
+          :tabindex="feedbackResult ? -1 : 0"
           :variant="answerVariant(answer.id)"
           @click="selectAnswer(answer.id)"
+          @keydown.enter="selectAnswer(answer.id)"
+          @keydown.space.prevent="selectAnswer(answer.id)"
         >
           <v-card-text class="d-flex align-center">
             <span class="text-body-1">{{ answer.text }}</span>
@@ -27,6 +33,7 @@
 
       <v-alert
         v-if="feedbackResult?.correct"
+        aria-live="polite"
         class="mt-4"
         data-testid="feedback-correct"
         density="compact"
@@ -38,6 +45,7 @@
 
       <v-alert
         v-if="feedbackResult && !feedbackResult.correct"
+        aria-live="polite"
         class="mt-4"
         data-testid="feedback-incorrect"
         density="compact"
@@ -154,7 +162,15 @@
     const rect = origin.getBoundingClientRect()
     const cx = rect.left + rect.width / 2
     const cy = rect.top + rect.height / 2
-    const colors = ['#F5A623', '#2D1B69', '#4CAF50', '#FF5252', '#2196F3', '#FF9800']
+    const style = getComputedStyle(document.documentElement)
+    const colors = [
+      `rgb(${style.getPropertyValue('--v-theme-secondary')})`,
+      `rgb(${style.getPropertyValue('--v-theme-primary')})`,
+      `rgb(${style.getPropertyValue('--v-theme-success')})`,
+      `rgb(${style.getPropertyValue('--v-theme-error')})`,
+      `rgb(${style.getPropertyValue('--v-theme-info')})`,
+      `rgb(${style.getPropertyValue('--v-theme-warning')})`,
+    ]
     for (let i = 0; i < 12; i++) {
       const dot = document.createElement('div')
       Object.assign(dot.style, {

@@ -12,7 +12,7 @@ export const animationsEnabled = ref(!isTestEnv && !prefersReducedMotion)
 
 let gsapInstance: typeof GsapType | null = null
 
-export async function getGsap () {
+export async function getGsap (): Promise<typeof GsapType | null> {
   if (!animationsEnabled.value) {
     return null
   }

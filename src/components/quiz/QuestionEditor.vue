@@ -3,7 +3,7 @@
     <v-card-item class="pb-0">
       <template #prepend>
         <v-avatar color="secondary" size="40" variant="flat">
-          <span class="text-body-1 font-weight-bold text-white">{{ index + 1 }}</span>
+          <span class="text-body-1 font-weight-bold text-on-secondary">{{ index + 1 }}</span>
         </v-avatar>
       </template>
       <v-card-title class="text-subtitle-1 font-weight-bold">
@@ -46,6 +46,7 @@
         />
 
         <v-btn
+          :aria-label="`Remove answer ${i + 1}`"
           color="error"
           :data-testid="`remove-answer-${i}`"
           :disabled="question.answers.length <= 2"
@@ -142,7 +143,7 @@
 
 <style scoped>
   .question-editor {
-    border: 1.5px solid rgb(var(--v-theme-primary), 0.1);
+    border: 1.5px solid rgba(var(--v-theme-primary), 0.1);
     padding: 16px;
   }
 </style>

@@ -2,7 +2,8 @@
   <div class="progress-path">
     <div class="progress-path__track">
       <v-progress-linear
-        bg-color="grey-lighten-2"
+        aria-label="Quiz progress"
+        bg-color="surface"
         class="progress-path__line"
         color="secondary"
         height="6"
@@ -11,13 +12,16 @@
       />
     </div>
 
-    <div ref="nodesRef" class="progress-path__nodes">
+    <div ref="nodesRef" class="progress-path__nodes" role="list">
       <div
         v-for="(step, i) in total"
         :key="i"
+        :aria-current="i === current ? 'step' : undefined"
+        :aria-label="`Question ${i + 1} of ${total}`"
         class="progress-path__node"
         :class="nodeClass(i)"
         :data-testid="`step-node-${i}`"
+        role="listitem"
       >
         <v-icon v-if="i < current" icon="mdi-check" size="16" />
         <span v-else class="text-caption font-weight-bold">{{ i + 1 }}</span>
@@ -27,6 +31,7 @@
 </template>
 
 <script setup lang="ts">
+  import type { gsap as GsapType } from 'gsap'
   import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
   import { getGsap } from '@/composables/useGsap'
 
@@ -36,13 +41,13 @@
   }>()
 
   const nodesRef = ref<HTMLElement | null>(null)
-  let pulseTween: any
+  let pulseTween: ReturnType<typeof GsapType.to> | undefined
 
   async function pulseCurrentNode () {
     await nextTick()
     const gsap = await getGsap()
     if (!gsap || !nodesRef.value) return
-    if (pulseTween) pulseTween.kill()
+    pulseTween?.kill()
     const nodes = nodesRef.value.querySelectorAll('.progress-path__node')
     const currentNode = nodes[props.current]
     if (!currentNode) return
@@ -52,7 +57,7 @@
   onMounted(pulseCurrentNode)
   watch(() => props.current, pulseCurrentNode)
   onUnmounted(() => {
-    if (pulseTween) pulseTween.kill()
+    pulseTween?.kill()
   })
 
   const progressPercent = computed(() =>
@@ -65,7 +70,6 @@
     return {
       'bg-primary': index < props.current,
       'bg-secondary': index === props.current,
-      'bg-grey': index > props.current,
       'progress-path__node--completed': index < props.current,
       'progress-path__node--current': index === props.current,
       'progress-path__node--upcoming': index > props.current,
@@ -102,24 +106,25 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: rgb(var(--v-theme-on-primary));
   font-size: 14px;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px rgba(var(--v-theme-on-surface), 0.15);
 }
 
 .progress-path__node--current {
   width: 42px;
   height: 42px;
-  box-shadow: 0 2px 12px rgba(245, 166, 35, 0.4);
+  box-shadow: 0 2px 12px rgba(var(--v-theme-secondary), 0.4);
 }
 
 .progress-path__node--upcoming {
-  color: white;
+  background-color: rgb(var(--v-theme-on-surface), 0.3);
+  color: rgb(var(--v-theme-on-primary));
   opacity: 0.7;
 }
 
 .progress-path__node--completed {
-  color: white;
+  color: rgb(var(--v-theme-on-primary));
 }
 </style>

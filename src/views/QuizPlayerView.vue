@@ -2,6 +2,7 @@
   <v-container>
     <div class="d-flex align-center ga-2 mb-6">
       <v-btn
+        aria-label="Back to quiz list"
         data-testid="back-btn"
         icon="mdi-arrow-left"
         variant="text"

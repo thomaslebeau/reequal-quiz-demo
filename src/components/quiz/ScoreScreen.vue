@@ -8,9 +8,11 @@
 
     <v-card-text>
       <v-progress-circular
+        :aria-label="`Score: ${displayedPercentage} percent`"
         :color="progressColor"
         data-testid="score-progress"
         :model-value="displayedPercentage"
+        role="progressbar"
         :size="120"
         :width="10"
       >
@@ -50,12 +52,14 @@
         <v-card-text class="d-flex align-center ga-3 py-2">
           <v-icon
             v-if="result.correct"
+            aria-label="Correct"
             color="success"
             data-testid="recap-icon-correct"
             icon="mdi-check-circle"
           />
           <v-icon
             v-else
+            aria-label="Incorrect"
             color="error"
             data-testid="recap-icon-incorrect"
             icon="mdi-close-circle"

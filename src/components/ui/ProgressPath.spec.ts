@@ -52,11 +52,11 @@ describe('ProgressPath', () => {
       expect(currentStep.classes().some(c => c.includes('bg-secondary'))).toBe(true)
     })
 
-    it('should mark upcoming steps with grey color', () => {
+    it('should mark upcoming steps with upcoming style', () => {
       const wrapper = mountPath(4, 1)
 
       const upcoming = wrapper.find('[data-testid="step-node-2"]')
-      expect(upcoming.classes().some(c => c.includes('bg-grey'))).toBe(true)
+      expect(upcoming.classes()).toContain('progress-path__node--upcoming')
     })
 
     it('should show a check icon on completed steps', () => {

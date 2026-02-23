@@ -15,5 +15,5 @@ registerPlugins(app)
 app.mount('#app')
 
 if (import.meta.env.DEV) {
-  ;(window as any).__quizStore__ = useQuizStore()
+  (window as Window & { __quizStore__?: ReturnType<typeof useQuizStore> }).__quizStore__ = useQuizStore()
 }
