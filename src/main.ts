@@ -3,6 +3,7 @@ import { registerPlugins } from '@/plugins'
 import { useQuizStore } from '@/stores/quizStore'
 import App from './App.vue'
 
+import '@/styles/reset.css'
 import '@fontsource/nunito/400.css'
 import '@fontsource/nunito/600.css'
 import '@fontsource/nunito/700.css'

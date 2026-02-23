@@ -30,17 +30,23 @@
       <div class="text-body-2 text-medium-emphasis">Create your first quiz to get started</div>
     </div>
 
-    <div v-else class="d-flex flex-column ga-4">
-      <QuizCard
+    <v-row v-else>
+      <v-col
         v-for="quiz in filteredQuizzes"
         :key="quiz.id"
-        :data-testid="`quiz-card-${quiz.id}`"
-        :quiz="quiz"
-        @delete="onDelete"
-        @edit="onEdit"
-        @play="onPlay"
-      />
-    </div>
+        cols="12"
+        lg="4"
+        md="6"
+      >
+        <QuizCard
+          :data-testid="`quiz-card-${quiz.id}`"
+          :quiz="quiz"
+          @delete="onDelete"
+          @edit="onEdit"
+          @play="onPlay"
+        />
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 

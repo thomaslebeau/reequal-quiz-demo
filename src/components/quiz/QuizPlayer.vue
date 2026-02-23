@@ -1,9 +1,8 @@
 <template>
   <v-card
-    class="quiz-player"
+    class="quiz-player pa-6"
     data-testid="quiz-player-card"
     elevation="2"
-    rounded="xl"
   >
     <v-card-item>
       <v-card-title class="text-h5 font-weight-bold">

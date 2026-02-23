@@ -1,12 +1,12 @@
 <template>
-  <v-card class="question-step" elevation="2" rounded="xl">
-    <v-card-item>
+  <v-card class="question-step pa-6" elevation="2">
+    <v-card-item class="pb-2">
       <v-card-title class="text-h6 font-weight-bold">
         {{ question.text }}
       </v-card-title>
     </v-card-item>
 
-    <v-card-text>
+    <v-card-text class="px-6 pt-4 pb-2">
       <v-card
         v-for="(answer, i) in question.answers"
         :key="answer.id"
@@ -46,7 +46,7 @@
       </v-alert>
     </v-card-text>
 
-    <v-card-actions>
+    <v-card-actions class="px-6 pb-6">
       <v-spacer />
 
       <v-btn

@@ -1,5 +1,5 @@
 <template>
-  <v-card class="score-screen text-center" elevation="2" rounded="xl">
+  <v-card class="score-screen text-center" elevation="2">
     <v-card-item>
       <v-card-title class="text-h5 font-weight-bold">
         Your Score

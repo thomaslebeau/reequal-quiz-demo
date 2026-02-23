@@ -1,5 +1,5 @@
 <template>
-  <v-card class="question-editor" elevation="0" rounded="xl">
+  <v-card class="question-editor" elevation="0">
     <v-card-item class="pb-0">
       <template #prepend>
         <v-avatar color="secondary" size="40" variant="flat">

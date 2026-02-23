@@ -18,7 +18,7 @@
       <div class="text-h6">Quiz not found</div>
     </div>
 
-    <v-card v-else elevation="2" rounded="xl">
+    <v-card v-else elevation="2">
       <v-card-text class="pa-8">
         <QuizForm
           data-testid="quiz-form"

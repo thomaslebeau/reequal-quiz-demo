@@ -1,33 +1,37 @@
 <template>
-  <v-card class="quiz-card" elevation="2" rounded="xl">
-    <v-card-item>
-      <template #prepend>
-        <v-avatar color="primary" size="48" variant="tonal">
-          <v-icon icon="mdi-clipboard-text-outline" />
-        </v-avatar>
-      </template>
-
-      <v-card-title class="text-h6 font-weight-bold">
-        {{ quiz.title }}
-      </v-card-title>
-
-      <v-card-subtitle>
-        Updated {{ formattedDate }}
-      </v-card-subtitle>
-    </v-card-item>
-
+  <v-card class="quiz-card pa-6" elevation="0">
     <v-card-text>
+      <div class="d-flex align-start ga-4 mb-4">
+        <v-avatar
+          class="quiz-card__icon"
+          color="secondary"
+          rounded="lg"
+          size="52"
+          variant="flat"
+        >
+          <v-icon color="white" icon="mdi-clipboard-text-outline" size="28" />
+        </v-avatar>
+
+        <div class="flex-grow-1">
+          <div class="text-h6 font-weight-bold mb-1">{{ quiz.title }}</div>
+          <div class="text-body-2 text-medium-emphasis">Updated {{ formattedDate }}</div>
+        </div>
+      </div>
+
       <v-chip color="primary" size="small" variant="tonal">
         {{ quiz.questions.length }} {{ quiz.questions.length === 1 ? 'question' : 'questions' }}
       </v-chip>
     </v-card-text>
 
-    <v-card-actions>
+    <v-divider />
+
+    <v-card-actions class="pa-4 ga-2">
       <v-btn
         color="primary"
         data-testid="edit-btn"
         prepend-icon="mdi-pencil-outline"
-        variant="text"
+        size="small"
+        variant="tonal"
         @click="$emit('edit', quiz.id)"
       >
         Edit
@@ -37,6 +41,7 @@
         color="error"
         data-testid="delete-btn"
         prepend-icon="mdi-delete-outline"
+        size="small"
         variant="text"
         @click="$emit('delete', quiz.id)"
       >
@@ -80,3 +85,19 @@
     }),
   )
 </script>
+
+<style scoped>
+  .quiz-card {
+    box-shadow: 0 2px 12px rgba(45, 27, 105, 0.08);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+  }
+
+  .quiz-card:hover {
+    box-shadow: 0 4px 20px rgba(45, 27, 105, 0.14);
+    transform: translateY(-2px);
+  }
+
+  .quiz-card__icon {
+    opacity: 0.9;
+  }
+</style>

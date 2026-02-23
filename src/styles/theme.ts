@@ -44,7 +44,6 @@ export const reequal: ThemeDefinition = {
 
 export const defaults = {
   VCard: {
-    rounded: 'xl',
     elevation: 2,
   },
   VBtn: {
