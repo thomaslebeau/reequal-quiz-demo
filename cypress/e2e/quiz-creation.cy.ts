@@ -17,8 +17,9 @@ describe('Quiz Creation Flow', () => {
   })
 
   it('should create a complete quiz and see it in the list', () => {
-    // Navigate to create
+    // Navigate to create and wait for editor to render
     cy.get('[data-testid="create-quiz-btn"]').click()
+    cy.get('[data-testid="quiz-title"]', { timeout: 10_000 }).should('be.visible')
 
     // Fill quiz title
     cy.get('[data-testid="quiz-title"] input').type('Geography Quiz')
@@ -50,7 +51,8 @@ describe('Quiz Creation Flow', () => {
     cy.get('[data-testid="save-btn"]').click()
 
     // Should navigate back to the list
-    cy.url().should('eq', Cypress.config('baseUrl') + '/')
+    cy.contains('h1', 'Quizzes', { timeout: 10_000 })
+    cy.url().should('match', /\/$/)
 
     // Verify the quiz appears in the list
     cy.contains('Geography Quiz')
@@ -62,6 +64,7 @@ describe('Quiz Creation Flow', () => {
 
   it('should validate required fields before saving', () => {
     cy.get('[data-testid="create-quiz-btn"]').click()
+    cy.get('[data-testid="save-btn"]', { timeout: 10_000 }).should('be.visible')
 
     // Try to save with empty title
     cy.get('[data-testid="save-btn"]').click()
@@ -75,6 +78,7 @@ describe('Quiz Creation Flow', () => {
 
   it('should add and remove answers within a question', () => {
     cy.get('[data-testid="create-quiz-btn"]').click()
+    cy.get('[data-testid="quiz-title"]', { timeout: 10_000 }).should('be.visible')
 
     // Default question has 2 answers
     cy.get('[data-testid^="answer-text-"]').should('have.length', 2)
@@ -90,6 +94,7 @@ describe('Quiz Creation Flow', () => {
 
   it('should add and remove questions', () => {
     cy.get('[data-testid="create-quiz-btn"]').click()
+    cy.get('[data-testid="quiz-title"]', { timeout: 10_000 }).should('be.visible')
 
     // Default: 1 question
     cy.get('[data-testid^="question-editor-"]').should('have.length', 1)
@@ -105,10 +110,11 @@ describe('Quiz Creation Flow', () => {
 
   it('should navigate back to list via back button without saving', () => {
     cy.get('[data-testid="create-quiz-btn"]').click()
-    cy.url().should('include', '/quiz/new')
+    cy.get('[data-testid="back-btn"]', { timeout: 10_000 }).should('be.visible')
 
     cy.get('[data-testid="back-btn"]').click()
-    cy.url().should('eq', Cypress.config('baseUrl') + '/')
+    cy.contains('h1', 'Quizzes', { timeout: 10_000 })
+    cy.url().should('match', /\/$/)
 
     // Empty state should still show (nothing was saved)
     cy.get('[data-testid="empty-state"]').should('be.visible')

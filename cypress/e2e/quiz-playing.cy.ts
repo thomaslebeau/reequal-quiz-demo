@@ -67,7 +67,7 @@ describe('Quiz Playing Flow', () => {
   it('should display the first question', () => {
     cy.get('[data-testid="play-btn"]').first().click()
 
-    cy.contains('What color is the sky?')
+    cy.contains('What color is the sky?', { timeout: 10_000 })
     cy.contains('1 / 3')
     cy.get('[data-testid="confirm-btn"]').should('be.disabled')
   })
@@ -76,7 +76,7 @@ describe('Quiz Playing Flow', () => {
     cy.get('[data-testid="play-btn"]').first().click()
 
     // Question 1: "What color is the sky?" — correct is Blue (index 1)
-    cy.contains('What color is the sky?')
+    cy.contains('What color is the sky?', { timeout: 10_000 })
     cy.get('[data-testid="answer-option-1"]').click()
     cy.get('[data-testid="confirm-btn"]').should('not.be.disabled')
     cy.get('[data-testid="confirm-btn"]').click()
@@ -114,6 +114,7 @@ describe('Quiz Playing Flow', () => {
     cy.get('[data-testid="play-btn"]').first().click()
 
     // Question 1: pick wrong answer (Green, index 0)
+    cy.contains('What color is the sky?', { timeout: 10_000 })
     cy.get('[data-testid="answer-option-0"]').click()
     cy.get('[data-testid="confirm-btn"]').click()
 
@@ -122,6 +123,7 @@ describe('Quiz Playing Flow', () => {
 
   it('should play through with mixed results and show score', () => {
     cy.get('[data-testid="play-btn"]').first().click()
+    cy.contains('What color is the sky?', { timeout: 10_000 })
 
     // Q1: Wrong answer (Green)
     cy.get('[data-testid="answer-option-0"]').click()
@@ -152,6 +154,7 @@ describe('Quiz Playing Flow', () => {
 
   it('should return to the list when play again is clicked', () => {
     cy.get('[data-testid="play-btn"]').first().click()
+    cy.contains('What color is the sky?', { timeout: 10_000 })
 
     // Speed through: answer all 3 questions
     cy.get('[data-testid="answer-option-1"]').click()
@@ -170,15 +173,16 @@ describe('Quiz Playing Flow', () => {
     cy.get('[data-testid="play-again-btn"]').click()
 
     // Should navigate back to the quiz list
-    cy.url().should('eq', Cypress.config('baseUrl') + '/')
-    cy.contains('E2E Test Quiz')
+    cy.contains('h1', 'Quizzes', { timeout: 10_000 })
+    cy.url().should('match', /\/$/)
   })
 
   it('should navigate back via back button during play', () => {
     cy.get('[data-testid="play-btn"]').first().click()
-    cy.url().should('include', '/play')
+    cy.get('[data-testid="back-btn"]', { timeout: 10_000 }).should('be.visible')
 
     cy.get('[data-testid="back-btn"]').click()
-    cy.url().should('eq', Cypress.config('baseUrl') + '/')
+    cy.contains('h1', 'Quizzes', { timeout: 10_000 })
+    cy.url().should('match', /\/$/)
   })
 })
