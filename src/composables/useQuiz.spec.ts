@@ -57,14 +57,13 @@ describe('useQuiz', () => {
       expect(quiz1.id).not.toBe(quiz2.id)
     })
 
-    it('should add the created quiz to the store', () => {
+    it('should not add the quiz to the store', () => {
       const { createQuiz } = useQuiz()
       const store = useQuizStore()
 
-      const quiz = createQuiz('Stored Quiz')
+      createQuiz('Pure Factory')
 
-      expect(store.quizzes).toHaveLength(1)
-      expect(store.quizzes[0]).toEqual(quiz)
+      expect(store.quizzes).toHaveLength(0)
     })
   })
 
@@ -150,34 +149,84 @@ describe('useQuiz', () => {
     })
   })
 
-  describe('store delegation', () => {
-    it('should delete a quiz from the store via deleteQuiz', () => {
-      const { createQuiz, deleteQuiz } = useQuiz()
+  describe('saveQuiz', () => {
+    it('should add the quiz to the store', () => {
+      const { createQuiz, saveQuiz } = useQuiz()
       const store = useQuizStore()
 
-      const quiz = createQuiz('To Delete')
+      const quiz = createQuiz('Saved Quiz')
+      saveQuiz(quiz)
+
+      expect(store.quizzes).toHaveLength(1)
+      expect(store.quizzes[0]).toEqual(quiz)
+    })
+
+    it('should allow saving multiple quizzes', () => {
+      const { createQuiz, saveQuiz } = useQuiz()
+      const store = useQuizStore()
+
+      saveQuiz(createQuiz('First'))
+      saveQuiz(createQuiz('Second'))
+
+      expect(store.quizzes).toHaveLength(2)
+    })
+
+    it('should make the quiz retrievable by id', () => {
+      const { createQuiz, saveQuiz, getQuizById } = useQuiz()
+
+      const quiz = createQuiz('Findable')
+      saveQuiz(quiz)
+
+      expect(getQuizById(quiz.id)).toEqual(quiz)
+    })
+  })
+
+  describe('removeQuiz', () => {
+    it('should remove the quiz from the store', () => {
+      const { createQuiz, saveQuiz, removeQuiz } = useQuiz()
+      const store = useQuizStore()
+
+      const quiz = createQuiz('To Remove')
+      saveQuiz(quiz)
       expect(store.quizzes).toHaveLength(1)
 
-      deleteQuiz(quiz.id)
+      removeQuiz(quiz.id)
 
       expect(store.quizzes).toHaveLength(0)
     })
 
-    it('should expose quizzes from the store', () => {
-      const { createQuiz, quizzes } = useQuiz()
+    it('should only remove the targeted quiz', () => {
+      const { createQuiz, saveQuiz, removeQuiz } = useQuiz()
+      const store = useQuizStore()
 
-      createQuiz('Quiz A')
-      createQuiz('Quiz B')
+      const keep = createQuiz('Keep')
+      const remove = createQuiz('Remove')
+      saveQuiz(keep)
+      saveQuiz(remove)
 
-      expect(quizzes).toHaveLength(2)
+      removeQuiz(remove.id)
+
+      expect(store.quizzes).toHaveLength(1)
+      expect(store.quizzes[0].id).toBe(keep.id)
     })
 
-    it('should expose quizCount from the store', () => {
-      const { createQuiz, quizCount } = useQuiz()
+    it('should not throw when removing a nonexistent quiz', () => {
+      const { removeQuiz } = useQuiz()
 
-      expect(quizCount).toBe(0)
-      createQuiz('Quiz A')
-      expect(useQuizStore().quizCount).toBe(1)
+      expect(() => removeQuiz('nonexistent')).not.toThrow()
+    })
+
+    it('should decrement quizCount after removal', () => {
+      const { createQuiz, saveQuiz, removeQuiz, quizCount } = useQuiz()
+      const store = useQuizStore()
+
+      const quiz = createQuiz('Counted')
+      saveQuiz(quiz)
+      expect(store.quizCount).toBe(1)
+
+      removeQuiz(quiz.id)
+
+      expect(store.quizCount).toBe(0)
     })
   })
 })

@@ -5,15 +5,13 @@ export function useQuiz() {
   const store = useQuizStore()
 
   function createQuiz(title: string): Quiz {
-    const quiz: Quiz = {
+    return {
       id: crypto.randomUUID(),
       title,
       questions: [],
       createdAt: new Date(),
       updatedAt: new Date(),
     }
-    store.addQuiz(quiz)
-    return quiz
   }
 
   function createQuestion(text: string): Question {
@@ -32,6 +30,14 @@ export function useQuiz() {
     }
   }
 
+  function saveQuiz(quiz: Quiz): void {
+    store.addQuiz(quiz)
+  }
+
+  function removeQuiz(id: string): void {
+    store.deleteQuiz(id)
+  }
+
   return {
     quizzes: store.quizzes,
     quizCount: store.quizCount,
@@ -39,7 +45,7 @@ export function useQuiz() {
     createQuiz,
     createQuestion,
     createAnswer,
-    updateQuiz: store.updateQuiz,
-    deleteQuiz: store.deleteQuiz,
+    saveQuiz,
+    removeQuiz,
   }
 }
