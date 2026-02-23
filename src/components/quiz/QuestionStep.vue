@@ -199,12 +199,7 @@
   }
 
   function answerVariant (answerId: string): 'flat' | 'outlined' {
-    if (props.feedbackResult && (
-      answerId === props.feedbackResult.correctAnswerId
-      || answerId === props.selectedAnswerId
-    )) {
-      return 'flat'
-    }
+    if (props.feedbackResult) return 'flat'
     if (selectedId.value === answerId) return 'flat'
     return 'outlined'
   }

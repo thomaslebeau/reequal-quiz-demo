@@ -193,6 +193,29 @@ describe('QuestionStep', () => {
       ).toBe(true)
     })
 
+    it('should not apply error or success styling to uninvolved answers when feedback is shown', () => {
+      const wrapper = mountStep(makeQuestion(), {
+        feedbackResult: { correct: false, correctAnswerId: 'a2' },
+        selectedAnswerId: 'a1',
+      })
+
+      const neutralCard = wrapper.find('[data-testid="answer-option-2"]')
+      expect(neutralCard.classes().some(c => c.includes('bg-error'))).toBe(false)
+      expect(neutralCard.classes().some(c => c.includes('bg-success'))).toBe(false)
+    })
+
+    it('should use flat variant on all answer cards when feedback is displayed', () => {
+      const wrapper = mountStep(makeQuestion(), {
+        feedbackResult: { correct: false, correctAnswerId: 'a2' },
+        selectedAnswerId: 'a1',
+      })
+
+      const answerCards = wrapper.findAll('[data-testid^="answer-option-"]')
+      for (const card of answerCards) {
+        expect(card.classes()).toContain('v-card--variant-flat')
+      }
+    })
+
     it('should disable answer selection when feedback is displayed', () => {
       const wrapper = mountStep(makeQuestion(), {
         feedbackResult: { correct: true, correctAnswerId: 'a2' },

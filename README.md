@@ -2,7 +2,11 @@
 
 A gamified quiz creation and play module built with **Vue.js 3** and **Vuetify 3**, demonstrating TDD workflow, Composition API mastery, and Pinia state management. Created as a technical showcase for **Reenbow** (Station F, Paris) -- a gamified LMS platform with VR/AI features for schools and training centers.
 
-![App Screenshot](docs/screenshot-placeholder.png)
+![Quiz List](docs/quiz-list.png)
+![Quiz Player 1](docs/quiz-player1.png)
+![Quiz Player 2](docs/quiz-player2.png)
+![Score Screen](docs/quiz-player3.png)
+![Quiz Editor](docs/quiz-editor.png)
 
 ## Features
 
@@ -13,8 +17,8 @@ A gamified quiz creation and play module built with **Vue.js 3** and **Vuetify 3
 ## Tech Stack
 
 | Layer            | Technology                       |
-|------------------|----------------------------------|
-| Framework        | Vue.js 3 (Composition API only) |
+| ---------------- | -------------------------------- |
+| Framework        | Vue.js 3 (Composition API only)  |
 | UI Library       | Vuetify 3 (custom Reequal theme) |
 | State Management | Pinia                            |
 | Router           | Vue Router 4                     |
