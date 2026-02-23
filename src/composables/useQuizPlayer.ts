@@ -1,33 +1,44 @@
 import { ref, computed } from 'vue'
 import type { Quiz } from '@/types/quiz'
 
+export interface SubmitResult {
+  correct: boolean
+  correctAnswerId: string
+}
+
 export function useQuizPlayer(quiz: Quiz) {
   const currentIndex = ref(0)
-  const answers = ref<Map<string, string>>(new Map())
+  const selectedAnswerId = ref<string | null>(null)
+  const score = ref(0)
 
   const currentQuestion = computed(() => quiz.questions[currentIndex.value])
-  const isLastQuestion = computed(() => currentIndex.value === quiz.questions.length - 1)
-  const isFinished = computed(() => currentIndex.value >= quiz.questions.length)
+  const totalQuestions = computed(() => quiz.questions.length)
+  const isComplete = computed(() => currentIndex.value >= quiz.questions.length)
   const progress = computed(() =>
     quiz.questions.length > 0
-      ? ((currentIndex.value) / quiz.questions.length) * 100
-      : 0
+      ? (currentIndex.value / quiz.questions.length) * 100
+      : 0,
   )
 
-  const score = computed(() => {
-    let correct = 0
-    for (const question of quiz.questions) {
-      const selectedId = answers.value.get(question.id)
-      const correctAnswer = question.answers.find(a => a.isCorrect)
-      if (selectedId && correctAnswer && selectedId === correctAnswer.id) {
-        correct++
-      }
-    }
-    return correct
-  })
+  function selectAnswer(answerId: string): void {
+    selectedAnswerId.value = answerId
+  }
 
-  function selectAnswer(questionId: string, answerId: string): void {
-    answers.value.set(questionId, answerId)
+  function submitAnswer(): SubmitResult {
+    const question = currentQuestion.value
+    const correctAnswer = question.answers.find(a => a.isCorrect)
+    const isCorrect = selectedAnswerId.value === correctAnswer?.id
+
+    if (isCorrect) {
+      score.value++
+    }
+
+    selectedAnswerId.value = null
+
+    return {
+      correct: isCorrect,
+      correctAnswerId: correctAnswer?.id ?? '',
+    }
   }
 
   function nextQuestion(): void {
@@ -38,17 +49,19 @@ export function useQuizPlayer(quiz: Quiz) {
 
   function reset(): void {
     currentIndex.value = 0
-    answers.value = new Map()
+    selectedAnswerId.value = null
+    score.value = 0
   }
 
   return {
     currentIndex,
     currentQuestion,
-    isLastQuestion,
-    isFinished,
     progress,
-    score,
+    score: computed(() => score.value),
+    totalQuestions,
+    isComplete,
     selectAnswer,
+    submitAnswer,
     nextQuestion,
     reset,
   }
