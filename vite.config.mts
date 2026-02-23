@@ -33,5 +33,11 @@ export default defineConfig({
   test: {
     environment: 'happy-dom',
     globals: true,
+    css: true,
+    server: {
+      deps: {
+        inline: ['vuetify'],
+      },
+    },
   },
 } as UserConfig)
