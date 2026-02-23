@@ -5,22 +5,25 @@ import type { Quiz } from '@/types/quiz'
 export const useQuizStore = defineStore('quiz', () => {
   const quizzes = ref<Quiz[]>([])
 
-  const quizCount = computed(() => 0)
+  const quizCount = computed(() => quizzes.value.length)
 
   function getQuizById(id: string): Quiz | undefined {
-    return undefined
+    return quizzes.value.find(q => q.id === id)
   }
 
   function addQuiz(quiz: Quiz): void {
-    // not implemented
+    quizzes.value.push(quiz)
   }
 
   function updateQuiz(updated: Quiz): void {
-    // not implemented
+    const index = quizzes.value.findIndex(q => q.id === updated.id)
+    if (index !== -1) {
+      quizzes.value[index] = updated
+    }
   }
 
   function deleteQuiz(id: string): void {
-    // not implemented
+    quizzes.value = quizzes.value.filter(q => q.id !== id)
   }
 
   return {
