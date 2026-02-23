@@ -11,7 +11,9 @@
     "type-check": "vue-tsc --build --force",
     "lint": "eslint . --fix",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:e2e": "cypress run",
+    "test:e2e:open": "cypress open"
   },
   "dependencies": {
     "@fontsource/nunito": "^5.2.7",
@@ -28,6 +30,7 @@
     "@vitejs/plugin-vue": "^6.0.1",
     "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.8.1",
+    "cypress": "^15.10.0",
     "eslint": "^9.35.0",
     "eslint-config-vuetify": "^4.2.0",
     "happy-dom": "^20.7.0",
