@@ -2,15 +2,19 @@
   <v-form class="quiz-form" @submit.prevent="handleSave">
     <v-text-field
       v-model="title"
+      class="mb-2"
       data-testid="quiz-title"
+      density="comfortable"
       :error-messages="titleError"
       label="Quiz title"
+      prepend-inner-icon="mdi-pencil-outline"
+      variant="filled"
     />
 
     <div
       v-for="(question, i) in questions"
       :key="question.id"
-      class="mb-4"
+      class="mb-5"
     >
       <QuestionEditor
         :data-testid="`question-editor-${i}`"
@@ -19,31 +23,32 @@
         @update:question="updateQuestion(i, $event)"
       />
 
-      <v-btn
-        class="mt-1"
-        color="error"
-        :data-testid="`remove-question-${i}`"
-        :disabled="questions.length <= 1"
-        prepend-icon="mdi-close"
-        size="small"
-        variant="text"
-        @click="removeQuestion(i)"
-      >
-        Remove question
-      </v-btn>
+      <div class="d-flex justify-end mt-2">
+        <v-btn
+          color="error"
+          :data-testid="`remove-question-${i}`"
+          :disabled="questions.length <= 1"
+          prepend-icon="mdi-close"
+          size="small"
+          variant="text"
+          @click="removeQuestion(i)"
+        >
+          Remove question
+        </v-btn>
+      </div>
     </div>
 
-    <v-btn
-      class="mb-4"
-      color="primary"
-      data-testid="add-question-btn"
-      prepend-icon="mdi-plus"
-      size="small"
-      variant="tonal"
-      @click="addQuestion"
-    >
-      Add question
-    </v-btn>
+    <div class="d-flex align-center mb-6">
+      <v-btn
+        color="primary"
+        data-testid="add-question-btn"
+        prepend-icon="mdi-plus"
+        variant="tonal"
+        @click="addQuestion"
+      >
+        Add question
+      </v-btn>
+    </div>
 
     <v-alert
       v-if="validationError"
@@ -55,9 +60,13 @@
       {{ validationError }}
     </v-alert>
 
+    <v-divider class="mb-6" />
+
     <v-btn
       color="secondary"
       data-testid="save-btn"
+      prepend-icon="mdi-content-save"
+      size="large"
       variant="flat"
       @click="handleSave"
     >

@@ -1,9 +1,9 @@
 <template>
-  <v-card class="question-editor" elevation="1" rounded="xl">
-    <v-card-item>
+  <v-card class="question-editor" elevation="0" rounded="xl">
+    <v-card-item class="pb-0">
       <template #prepend>
-        <v-avatar color="secondary" size="36" variant="tonal">
-          <span class="text-body-1 font-weight-bold">{{ index + 1 }}</span>
+        <v-avatar color="secondary" size="40" variant="flat">
+          <span class="text-body-1 font-weight-bold text-white">{{ index + 1 }}</span>
         </v-avatar>
       </template>
       <v-card-title class="text-subtitle-1 font-weight-bold">
@@ -11,19 +11,20 @@
       </v-card-title>
     </v-card-item>
 
-    <v-card-text>
+    <v-card-text class="pt-4">
       <v-text-field
         data-testid="question-text"
         :error-messages="questionTextError"
         label="Question text"
         :model-value="question.text"
+        variant="filled"
         @update:model-value="updateQuestionText"
       />
 
       <div
         v-for="(answer, i) in question.answers"
         :key="answer.id"
-        class="d-flex align-center ga-2 mb-2"
+        class="d-flex align-center ga-3 mb-3"
       >
         <v-checkbox
           color="success"
@@ -36,10 +37,11 @@
 
         <v-text-field
           :data-testid="`answer-text-${i}`"
-          density="compact"
+          density="comfortable"
           hide-details
           :label="`Answer ${i + 1}`"
           :model-value="answer.text"
+          variant="filled"
           @update:model-value="updateAnswerText(i, $event as string)"
         />
 
@@ -65,7 +67,7 @@
       </v-alert>
 
       <v-btn
-        class="mt-2"
+        class="mt-3"
         color="primary"
         data-testid="add-answer-btn"
         :disabled="question.answers.length >= 4"
@@ -137,3 +139,10 @@
     emitUpdate({ answers })
   }
 </script>
+
+<style scoped>
+  .question-editor {
+    border: 1.5px solid rgb(var(--v-theme-primary), 0.1);
+    padding: 16px;
+  }
+</style>

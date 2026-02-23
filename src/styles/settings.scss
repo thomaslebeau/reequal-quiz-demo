@@ -1,6 +1,6 @@
 @use 'vuetify/settings' with (
-  $body-font-family: 'Nunito',
-  $heading-font-family: 'Nunito',
+  $body-font-family: ('Nunito', sans-serif),
+  $heading-font-family: ('Nunito', sans-serif),
   $border-radius-root: 12px,
   $card-border-radius: 16px
 );

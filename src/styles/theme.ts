@@ -44,7 +44,7 @@ export const reequal: ThemeDefinition = {
 
 export const defaults = {
   VCard: {
-    rounded: 'lg',
+    rounded: 'xl',
     elevation: 2,
   },
   VBtn: {
@@ -53,13 +53,23 @@ export const defaults = {
   VTextField: {
     variant: 'outlined' as const,
     rounded: 'lg',
+    color: 'primary',
   },
   VTextarea: {
     variant: 'outlined' as const,
     rounded: 'lg',
+    color: 'primary',
   },
   VSelect: {
     variant: 'outlined' as const,
     rounded: 'lg',
+    color: 'primary',
+  },
+  VCheckbox: {
+    color: 'success',
+  },
+  VDivider: {
+    color: 'primary',
+    opacity: 0.15,
   },
 }

@@ -1,7 +1,8 @@
 <template>
-  <v-container>
+  <v-container class="quiz-editor-view" style="max-width: 800px;">
     <div class="d-flex align-center ga-2 mb-6">
       <v-btn
+        color="primary"
         data-testid="back-btn"
         icon="mdi-arrow-left"
         variant="text"
@@ -17,12 +18,15 @@
       <div class="text-h6">Quiz not found</div>
     </div>
 
-    <QuizForm
-      v-else
-      data-testid="quiz-form"
-      :quiz="quiz"
-      @save="handleSave"
-    />
+    <v-card v-else elevation="2" rounded="xl">
+      <v-card-text class="pa-8">
+        <QuizForm
+          data-testid="quiz-form"
+          :quiz="quiz"
+          @save="handleSave"
+        />
+      </v-card-text>
+    </v-card>
   </v-container>
 </template>
 
